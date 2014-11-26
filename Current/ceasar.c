@@ -17,7 +17,7 @@ int main()
 			while(s[i]!='\0')
 			{
 				s[i]=toupper(s[i]);
-				if(s[i]>'A' && s[i]<'Z') s[i]=(s[i]-3<'A')?s[i]+23:s[i]-3;
+				if(s[i]>='A' && s[i]<='Z') s[i]=(s[i]-3<'A')?s[i]+23:s[i]-3;
 				i++;
 			}
 			puts(s);
@@ -28,7 +28,8 @@ int main()
 			i=0;
 			while(s[i]!='\0')
 			{
-				if(s[i]>'A' && s[i]<'Z') s[i]=(s[i]+3>'Z')?s[i]-23:s[i]+3;
+				s[i]=toupper(s[i]);
+				if(s[i]>='A' && s[i]<='Z') s[i]=(s[i]+3>'Z')?s[i]-23:s[i]+3;
 				i++;
 			}
 			puts(s);
