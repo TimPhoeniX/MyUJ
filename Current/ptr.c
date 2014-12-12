@@ -10,6 +10,7 @@ void BetweenPointers(int *ptr1,int *ptr2,int value)
 	int half=(ptr2-ptr1)/2,*temp=ptr1+half;
 	*temp=value;
 }
+/* Jeśli można spytać, co mam rozumieć przez ilość elementów zainicjowanych przez funkcję?*/
 char* NotLetter(char* string)
 {
 	char* tmp=string;
