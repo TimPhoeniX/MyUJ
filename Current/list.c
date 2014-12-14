@@ -18,7 +18,7 @@ int size(node_t *node)
 {
 	node_t *current=node;
 	int i=0;
-	if(current==NULL) exit(0);
+	if(current==NULL) return i;
 	else
 	{
 		
