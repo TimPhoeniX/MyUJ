@@ -1,4 +1,4 @@
-.PHONY: default clean run tar debug
+.PHONY: default clean run tar
 
 default: execl.exe ids.exe
 
@@ -15,4 +15,4 @@ run: execl.exe ids.exe
 	./$<
 
 tar: README Makefile execl.c ids.c
-	tar -czvf fork.tar.gz $^
+	tar -czvf execl.tar.gz $^

@@ -11,11 +11,13 @@ int main()
 	switch (PID=fork())
 		{
 		case -1:
-			perror("execl ERROR");
+			perror("fork ERROR");
 			exit(1);
 			break;
         case 0:
 			execl("./sig1.exe", "sig1.exe", (char*) NULL);
+			perror("execl error");
+			_exit(2);
 			break;
 		default:
 			sleep(1);
