@@ -1,0 +1,24 @@
+Execl by Piotr Grudzień
+
+execl.tar.gz powinien zawierać:
+README
+Makefile
+execl.c
+ids.c
+
+Program można uruchomić poprzez komendę "make run"
+
+Program wypisuje identyfikatory UID, GID, PID, PPID i PGID dla głównego procesu macierzystego
+a nastepnie wywoluje 3 razy fork i każdy proces potomny jest ponownie iniciowany programem wypisującym identyfikatory.
+
+Poza głównym procesem macierzystym powstaną 3 procesy potomne,
+Ponieważ przy każdym forku proces potomny zostaje zainicjowany programem, 
+który nie ma w sobie instrukcji fork.
+
+0
+|\
+| 1
+|\
+| 2
+ \
+  3

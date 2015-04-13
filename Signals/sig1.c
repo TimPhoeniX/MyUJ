@@ -3,23 +3,73 @@
 #include<signal.h>
 #include<stdlib.h>
 
-void sighandler(int sig)
+void sigIntHandler(int sig)
 {
 	puts("Otrzymano SIGINT");
 	exit(EXIT_SUCCESS);
 }
-
-int main()
+void sigQuitHandler(int sig)
 {
-	if (signal(SIGQUIT,SIG_IGN) == SIG_ERR)
+	puts("Otrzymano SIGQUIT");
+	exit(EXIT_SUCCESS);
+}
+
+int main(int argc, char **argv)
+{
+	if(argc>=2)
 	{
-		perror("Problem z SIGQUIT");
-		exit(EXIT_FAILURE);
+		switch(atoi(argv[1]))
+		{
+			case 1:
+				if (signal(SIGQUIT,sigQuitHandler) == SIG_ERR)
+				{
+					perror("Problem z SIGQUIT");
+					exit(EXIT_FAILURE);
+				}
+				if (signal(SIGINT,sigIntHandler) == SIG_ERR)
+				{
+					perror("Problem z SIGINT");
+					exit(EXIT_FAILURE);
+				}
+				break;
+			case 2:
+				if (signal(SIGQUIT,SIG_IGN) == SIG_ERR)
+				{
+					perror("Problem z SIGQUIT");
+					exit(EXIT_FAILURE);
+				}
+				if (signal(SIGINT,SIG_IGN) == SIG_ERR)
+				{
+					perror("Problem z SIGINT");
+					exit(EXIT_FAILURE);
+				}
+				break;
+			default:
+				if (signal(SIGQUIT,SIG_IGN) == SIG_ERR)
+				{
+					perror("Problem z SIGQUIT");
+					exit(EXIT_FAILURE);
+				}
+				if (signal(SIGINT,sigIntHandler) == SIG_ERR)
+				{
+					perror("Problem z SIGINT");
+					exit(EXIT_FAILURE);
+				}
+				break;
+		}
 	}
-	if (signal(SIGINT,sighandler) == SIG_ERR)
+	else
 	{
-		perror("Problem z SIGINT");
-		exit(EXIT_FAILURE);
+		if (signal(SIGQUIT,SIG_IGN) == SIG_ERR)
+		{
+			perror("Problem z SIGQUIT");
+			exit(EXIT_FAILURE);
+		}
+		if (signal(SIGINT,sigIntHandler) == SIG_ERR)
+		{
+			perror("Problem z SIGINT");
+			exit(EXIT_FAILURE);
+		}
 	}
 	
 	pause();
