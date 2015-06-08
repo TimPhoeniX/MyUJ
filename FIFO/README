@@ -1,0 +1,14 @@
+FIFO by Piotr Grudzień
+
+fifo.tar.gz powinien zawierać:
+README
+Makefile
+producent.c
+konsument.c
+pipe.c
+pipe.h
+source.txt
+
+Program producent.exe uruchamiany poprzez make run utworzy potok nazwany i będzie umieszczał w nim kolejne znaki z pliku source.txt
+Program konsument.exe uruchamiany poprzez make run2 będzie odczytywał potok i zapisywał zawartośc w copy.exe, a po zakończeniu usunie potok.
+Można też samodzielnie utworzyć potok. Wówczas trzeba przekazać jego nazwę jako pierwszy (i jedyny) argument przy uruchamianiu obydwu programów.

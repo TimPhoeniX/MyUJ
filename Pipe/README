@@ -2,7 +2,8 @@ Pipe by Piotr Grudzien
 
 pipe.tar.gz powinien zawierać:
 README
-makefile
+Makefile
+main.c
 pipe.c
 pipe.h
 source.txt
