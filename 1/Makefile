@@ -1,5 +1,5 @@
 binsearch.exe: main.cpp
-	g++ $< -o $@ -std=c++14
+	g++ $< -o $@ -std=c++11
 
 .PHONY: clean run
 clean:
