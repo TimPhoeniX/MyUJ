@@ -29,3 +29,4 @@
 
 # temporary files
 *~
+*.gz
