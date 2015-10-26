@@ -1,0 +1,52 @@
+Algorytmy sortowania I
+
+Zadanie podstawowe (1 punkt)
+
+Język: C / C++ / Java
+
+Proszę zaimplementować trzy algorytmy sortowania tablic liczb całkowitych w porządku malejącym. Mają to być 2 wybrane z poniższych prostych sortowań:
+ * bąbelkowe (bubblesort)
+ * przez wybieranie (selection sort)
+ * przez wstawianie (insertion sort)
+oraz obwiązkowo sortowanie przez scalanie (mergesort).
+
+Proszę przetestować napisane algorytmy na jeden z poniższych sposobów:
+* gotowe testy: plik dane.txt zawiera przykładowe tablice do posortowania, a plik wyniki.txt - wzorcowe wyniki; Państwa program powinien czytać ze standardowego wejścia dane w formacie opisanym poniżej (podane pliki można przekierowywać na standardowe wejście programu podobnie jak w pierwszym zadaniu, "./a.out < dane.txt") oraz wypisywać posortowane tablice na standardowe wyjście, które również można przekierować, tym razem do pliku, który można powórnać z plikiem wyniki.txt, zawierającym wzorcowe wyniki; pliki dane_duze.txt i wyniki_duze.txt zawierają po prostu większy zestaw danych (uwaga, niektóre sortowania mogą się wykonywać kilka minut)
+
+* można zamiast korzystania z podanych danych testowych stworzyć własne, np. tworząc wewnątrz programu kolejno coraz większe tablice i wypełniając je liczbami pseudolosowymi; następnie można te tablice sortować przy pomocy swojego algorytmu oraz przy pomocy którejś z biblioteczych implementacji (np. "qsort" z biblioteki stdlib lub "sort" z biblioteki algotithm, albo po prostu sprawdzać warunek posortowania tablicy) i porówywać wyniki
+
+Program powinien przyjmować na wejściu jeden parametr (chodzi o parametr podawany z wiersza poleceń, czyli np. argv[1] w C/C++) - liczbę, określającą, którego sortowania ma użyć w testach:
+	1 - pierwsze wybrane z powyższej listy
+	2 - drugie wybrane z powyższej listy
+	3 - mergesort
+
+******************************************************************************
+	
+Zadanie rozszerzone (2 punkty)
+
+Jak powyżej, ale program ma dodatkowo przyjmować drugi parametr, określający porządek sortowania:
+    	0 - malejąco
+	1 - rosnąco
+zatem każde z trzech sortowań musi być napisane "elastycznie" - tak, żeby dało się zmieniać w nim porządek sortowania.
+
+Do testów mogą się przydać pliki wyniki_rosnaco.txt oraz wyniki_duze_rosnaco.txt.
+
+Uwaga: rozwiązania w stylu:
+if( rosnaco ){
+    cały algorytm sortujący rosnąco    
+}else{
+    cały algorytm sortujący malejąco    
+}
+
+nie będą akceptowane!
+
+******************************************************************************
+
+Format pliku dane.txt z danymi wejściowymi do testów:
+pierwsza linia - N - int - liczba tablic do posortowania
+N kolejnych linii:
+  pierwsza liczba w linii: M - rozmiar tablicy; M kolejnych liczb całkowitych oddzielonych spacjami - zawartość tablicy
+  
+Format pliku wyniki.txt z wzorcowymi wynikami:
+N linii
+każda linia zawiera kolene elementy posortowanej tablicy oddzielone spacjami

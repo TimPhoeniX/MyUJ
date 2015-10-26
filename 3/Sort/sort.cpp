@@ -55,8 +55,9 @@ void selectionsort(int* A, int n)
 
 int main()
 {
-	int A[] = {9,5,3,4,6,7,8,1,0,2};
-	bubbleSort(A,10);
-	printSort(A,10);
+	int A[] = {9,5,3,4,6,7,8,1,0,2,11,-1,-2,-4};
+//	bubbleSort(A,14);
+	selectionsort(A, 14);
+	printSort(A,14);
 	return 0;
 }
