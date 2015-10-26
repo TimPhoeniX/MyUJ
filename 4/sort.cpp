@@ -63,6 +63,7 @@ void InsertionSort(int* A, int size, bool(*compare)(int,int))
 	}
 }
 
+//I could name it MergeSort too. Polymorphism rocks!
 void ArrayMerger(int* A, int a, int mid, int b, bool(*compare)(int,int))
 {
 	int* Result = new int[b-a];
