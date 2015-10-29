@@ -28,11 +28,11 @@ run21: sort.exe
 	diff -s wyniki_duze_rosnaco.txt moje_wyniki.txt
 
 run30: sort.exe
-	./$< 1 0 < dane_duze.txt > moje_wyniki.txt
+	./$< 3 0 < dane_duze.txt > moje_wyniki.txt
 	diff -s wyniki_duze.txt moje_wyniki.txt
 
 run31: sort.exe
-	./$< 1 1 < dane_duze.txt > moje_wyniki.txt
+	./$< 3 1 < dane_duze.txt > moje_wyniki.txt
 	diff -s wyniki_duze_rosnaco.txt moje_wyniki.txt
 
 runall: sort.exe

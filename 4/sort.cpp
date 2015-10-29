@@ -64,9 +64,10 @@ void InsertionSort(int* A, int size, bool(*compare)(int,int))
 }
 
 //I could name it MergeSort too. Polymorphism rocks!
-void ArrayMerger(int* A, int a, int mid, int b, bool(*compare)(int,int))
+void ArrayMerger(int* A,const int a,const int mid,const int b, bool(*compare)(int,int))
 {
-	int* Result = new int[b-a];
+	if(a==b) return;
+	int* Result = new int[(b-a+1)];
 	int i = a, j = mid+1, k = 0;
 	while( i <= mid && j <= b)
 	{
@@ -93,10 +94,11 @@ void ArrayMerger(int* A, int a, int mid, int b, bool(*compare)(int,int))
 			Result[k++]=A[j++];
 		}
 	}
-	for(int l = 0; l <= b-a; ++l)
+	for(int l = 0; (a+l)<=b; ++l)
 	{
 		A[a+l]=Result[l];
 	}
+	delete[] Result;
 }
 
 void MergeSort(int* A, int a, int b, bool(*compare)(int,int))
@@ -104,9 +106,13 @@ void MergeSort(int* A, int a, int b, bool(*compare)(int,int))
 	if(a<b)
 	{
 		int mid=(a+b)/2;
+	//	std::cerr << "Mid" << std::endl;
 		MergeSort(A,a,mid,compare);
+	//	std::cerr << "a-mid" << std::endl;
 		MergeSort(A,mid+1,b,compare);
+	//	std::cerr << "mid+1-b" << std::endl;
 		ArrayMerger(A,a,mid,b,compare);
+	//	std::cerr << "Merged" << std::endl;
 	}
 }
 
@@ -157,9 +163,14 @@ int main(int argc, char* argv[])
 	for(int i = 0; i < SetNum; ++i)
 	{
 		std::cin >> SetSize;
+	//	std::cerr << "ArraySizeRead" << std::endl;
 		Set = CreateArray(SetSize);
+	//	std::cerr << "ArrayCreated" << std::endl;
 		Sort(Set,SetSize,Compare);
+	//	std::cerr << "ArraySorted" << std::endl;
 		PrintArray(Set,SetSize);
+	//	std::cerr << "ArrayPrinted" << std::endl;
+		delete[] Set;
 	}
 	return 0;
 }
