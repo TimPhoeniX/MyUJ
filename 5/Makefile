@@ -14,10 +14,11 @@ $(Name): $(Sources) $(Headers)
 
 run: $(Name)
 	./$<
+	diff -q stable_sorted.txt unstable_sorted.txt
 
 clean:
 	rm -rf *~
 	rm -rf *.exe
 
 tar: $(files)
-	tar -czvf grudzienaisd3.tar.gz $^
+	tar -czvf grudzienaisd4.tar.gz $^
