@@ -24,7 +24,7 @@ namespace CTL
 	public:
 		int GetSize()
 		{
-			return this->size;
+			return this->Size;
 		}
 		
 		std::ostream& operator<<(std::ostream& stream) const
@@ -41,6 +41,7 @@ namespace CTL
 		void Clear()
 		{
 			delete[] this->DataPtr;
+			this->DataPtr=nullptr;
 			this->Size = 0;
 		}
 		
@@ -74,13 +75,17 @@ namespace CTL
 		}
 		
 		Data(const int size, std::istream& stream = std::cin)
-		: Size(size)
+		: Size(size), DataPtr(new T[size])
 		{
-			this->DataPtr = new T[Size];
 			this->ReadStream(stream);
 		}
 		
 		T& operator[](const int poz)
+		{
+			return this->DataPtr[poz];
+		}
+		
+		const T& operator[](const int poz) const
 		{
 			return this->DataPtr[poz];
 		}
@@ -91,6 +96,44 @@ namespace CTL
 				throw std::out_of_range("CTL::Data range check");
 			else
 				return this->DataPtr[poz];
+		}
+		
+		const T& at(const int poz) const
+		{
+			if(poz < 0 || this->Size <= poz)
+				throw std::out_of_range("CTL::Data range check");
+			else
+				return this->DataPtr[poz];
+		}
+		
+		T* begin()
+		{
+			return this->DataPtr;
+		}
+		
+		const T* begin() const
+		{
+			return this->DataPtr;
+		}
+		
+		T* end()
+		{
+			return this->DataPtr+this->Size;
+		}
+		
+		const T* end() const
+		{
+			return this->DataPtr+this->Size;
+		}
+		
+		const T* cbegin() const
+		{
+			return this->DataPtr;
+		}
+		
+		const T* cend() const
+		{
+			return this->DataPtr+this->Size;
 		}
 		
 		~Data()
