@@ -1,0 +1,10 @@
+Sort.exe Wczyta z pliku dane.txt iloczyn kartezjański {1,2,3,4,5} z {A,B,C,D,E}
+(w losowej kolejności), a następnie posortuje go następująco:
+1. MergeSort po liczbach , a potem po literach. Otrzymamy zbiór postaci:
+1 A 2 A 3 A 4 A 5 A 1 B 2 B ... zapisany w pliku stable_sorted.txt
+2. QuickSort po liczbach , a potem po literach. Otrzymamy zbiór zapisany w pliku
+unstable_sorted.txt
+
+Dane w stable_sorted.txt są posortowane stabilnie, co można łatwo wykazać.
+Dane w unstable_sorted.txt będą różne od danych z stable_sorted.txt
+co oznacza, że QuickSort nie sortuje stabilnie.
