@@ -15,12 +15,10 @@ $(Executable): $(Sources) $(Headers)
 
 run: $(Executable)
 	./$<
-	diff -q stable_sorted.txt unstable_sorted.txt
 
 clean:
 	rm -rf *~
 	rm -rf *.exe
-	rm -rf *_sorted.txt
 
 tar: $(files)
 	tar -czvf grudzienaisd4.tar.gz $^

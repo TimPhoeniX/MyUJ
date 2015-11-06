@@ -6,16 +6,32 @@
 
 int main()
 {
-	CTL::Data< CTL::Pair<int, char> > DataArray1("dane.txt");
-	CTL::Data< CTL::Pair<int, char> > DataArray2(DataArray1);
-	
-	DataArray1.Sort(CTL::MergeSort,CTL::Pair<int,char>::LessFirst);
-	DataArray1.Sort(CTL::MergeSort,CTL::Pair<int,char>::LessSecond);
-	DataArray1.WriteFile("stable_sorted.txt");
-
-	DataArray2.Sort(CTL::QuickSort,CTL::Pair<int,char>::LessFirst);
-	DataArray2.Sort(CTL::QuickSort,CTL::Pair<int,char>::LessSecond);
-	DataArray2.WriteFile("unstable_sorted.txt");
-	
+	std::ifstream DataFile("dane.txt");
+	std::ofstream ResultFile("wyniki.txt");
+	typedef typename CTL::Pair<int,char> Para;
+	for(int i = 0; i < 3; ++i)
+	{
+		CTL::Data<Para> DataArray1(DataFile);
+		CTL::Data<Para> DataArray2(DataArray1);
+		
+		ResultFile << "Dane    : " <<DataArray1 << std::endl;
+		
+		if(i!=2)
+		{
+			DataArray1.Sort(CTL::MergeSort,Para::LessFirst);
+			DataArray2.Sort(CTL::QuickSort,Para::LessFirst);
+		}
+		
+		if(i!=1)
+		{
+			DataArray1.Sort(CTL::MergeSort,Para::LessSecond);
+			DataArray2.Sort(CTL::QuickSort,Para::LessSecond);
+		}
+		
+		ResultFile << "Stable  : " << DataArray1 << std::endl \
+			<< "Unstable: " << DataArray2 << std::endl << std::endl;
+	}
+	DataFile.close();
+	ResultFile.close();
 	return 0;
 }
