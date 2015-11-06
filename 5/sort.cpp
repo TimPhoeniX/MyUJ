@@ -13,8 +13,8 @@ int main()
 	DataArray1.Sort(CTL::MergeSort,CTL::Pair<int,char>::LessSecond);
 	DataArray1.WriteFile("stable_sorted.txt");
 
-	DataArray1.Sort(CTL::QuickSort,CTL::Pair<int,char>::LessFirst);
-	DataArray1.Sort(CTL::QuickSort,CTL::Pair<int,char>::LessSecond);
+	DataArray2.Sort(CTL::QuickSort,CTL::Pair<int,char>::LessFirst);
+	DataArray2.Sort(CTL::QuickSort,CTL::Pair<int,char>::LessSecond);
 	DataArray2.WriteFile("unstable_sorted.txt");
 	
 	return 0;
