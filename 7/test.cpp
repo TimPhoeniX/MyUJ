@@ -9,5 +9,7 @@
 int main()
 {
 	TestList<CTL::ArrayList,int>();
+	TestList<CTL::ForwardList,int>();
+	TestList<CTL::LinkedList,int>();
 	return 0;
 }
