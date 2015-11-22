@@ -32,6 +32,11 @@ namespace CTL
 		}
 		
 	public:
+		constexpr T Epsilon(unsigned int e) const
+		{
+			return e==0 ? 1 : this->Epsilon(e-1)*T(0.1);
+		}
+		
 		Matrix( const unsigned int dim)
 		: Row(dim), Col(dim), Total(Row*Col), Val(new T[this->Total]{})
 		{
@@ -254,7 +259,7 @@ namespace CTL
 		{
 			for(unsigned int i = 0; i < this->Col; ++i)
 			{
-				out.precision(9);
+				out.precision(6);
 				out << this->operator[](i)[i] << '\t';
 			}
 		}
@@ -265,6 +270,15 @@ namespace CTL
 			return out;
 		}
 		
+		void SwapRows(unsigned int a, unsigned int b)
+		{
+			auto ra = this->operator[](a);
+			auto rb = this->operator[](b);
+			for(unsigned int i = 0; i < this->Col; ++i)
+			{
+				std::swap(*(ra++),*(rb++));
+			}
+		}
 		
 		Matrix<T> GivensRotation(const unsigned int i, const unsigned int j, const unsigned int c)
 		{
@@ -281,7 +295,7 @@ namespace CTL
 		}
 		
 		//Tranposes in place;
-		Matrix<T>& InplaceTransposeGivenRotation(const unsigned int i, const unsigned int j)
+		Matrix<T>& InplaceTransposeGivensRotation(const unsigned int i, const unsigned int j)
 		{
 			std::swap(this->operator[](i)[j],this->operator[](j)[i]);
 			return *this;
@@ -291,20 +305,21 @@ namespace CTL
 		{
 			for(unsigned int i = 0; i < this->Col-1; ++i)
 			{
-				if(this->operator[](i+1)[i] > T(0.1)) return false;
+				if(this->operator[](i+1)[i] > this->Epsilon(15)) return false;
 			}
 			return true;
 		}
 		
 		void QRAlgorithmSymmetricalTridiagonal()
 		{
-			while(!this->CheckQRConvergnece())
+			unsigned int iterationLimit = 6400;
+			while(!this->CheckQRConvergnece() && iterationLimit--)
 			{
 				for(unsigned int i = 0; i < this->Col - 1; ++i)
 				{
 					auto givens = this->GivensRotation(i,i+1,i);
 					(*this) = givens*(*this); 
-					givens.InplaceTransposeGivenRotation(i,i+1);
+					givens.InplaceTransposeGivensRotation(i,i+1);
 					*this = this->operator*(givens);
 				}
 			}
