@@ -17,3 +17,6 @@ run: $(Name)
 clean:
 	rm -rf *~
 	rm -rf *.exe
+
+tar: $(files)
+	tar -czvf grudzienaisd5.tar.gz $^
