@@ -31,16 +31,6 @@ int main()
 				case -1: 
 					break;
 				case '+':
-					b = Int.Pop();
-					sb = Expressions.Pop();
-					if(Priority.Pop() <= 1) sb='('+sb+')';
-					a = Int.Pop();
-					sa = Expressions.Pop();
-					if(Priority.Pop() < 1) sa='('+sa+')';
-					Int.Push(a+b);
-					Expressions.Push(sa+'+'+sb);
-					Priority.Push(1);
-					break;
 				case '-':
 					b = Int.Pop();
 					sb = Expressions.Pop();
@@ -48,21 +38,11 @@ int main()
 					a = Int.Pop();
 					sa = Expressions.Pop();
 					if(Priority.Pop() < 1) sa='('+sa+')';
-					Int.Push(a-b);
-					Expressions.Push(sa+'-'+sb);
+					Int.Push( c=='+'? a+b : a-b );
+					Expressions.Push(sa+char(c)+sb);
 					Priority.Push(1);
 					break;
 				case '*':
-					b = Int.Pop();
-					sb = Expressions.Pop();
-					if(Priority.Pop() <= 2) sb='('+sb+')';
-					a = Int.Pop();
-					sa = Expressions.Pop();
-					if(Priority.Pop() < 2) sa='('+sa+')';
-					Int.Push(a*b);
-					Expressions.Push(sa+'*'+sb);
-					Priority.Push(2);
-					break;
 				case '/':
 					b = Int.Pop();
 					sb = Expressions.Pop();
@@ -70,27 +50,27 @@ int main()
 					a = Int.Pop();
 					sa = Expressions.Pop();
 					if(Priority.Pop() < 2) sa='('+sa+')';;
-					Int.Push(a/b);
-					Expressions.Push(sa+'/'+sb);
+					Int.Push( c=='*'? a*b : a/b );
+					Expressions.Push(sa+char(c)+sb);
 					Priority.Push(2);
-					break;
-				case '^':
-					b = Int.Pop();
-					sb = Expressions.Pop();
-					if(Priority.Pop() <= 3) sb='('+sb+')';
-					a = Int.Pop();
-					sa = Expressions.Pop();
-					if(Priority.Pop() < 3) sa='('+sa+')';
-					Int.Push(std::pow(a,b));
-					Expressions.Push(sa+'^'+sb);
-					Priority.Push(3);
 					break;
 				case '~':
 					a = Int.Pop();
 					sa = Expressions.Pop();
-					if(Priority.Pop() <= 4) sb='('+sb+')';					
+					if(Priority.Pop() <= 3) sb='('+sb+')';
 					Int.Push(-a);
 					Expressions.Push('~'+sa);
+					Priority.Push(3);
+					break;
+				case '^':
+					b = Int.Pop();
+					sb = Expressions.Pop();
+					if(Priority.Pop() <= 4) sb='('+sb+')';
+					a = Int.Pop();
+					sa = Expressions.Pop();
+					if(Priority.Pop() < 4) sa='('+sa+')';
+					Int.Push(std::pow(a,b));
+					Expressions.Push(sa+'^'+sb);
 					Priority.Push(4);
 					break;
 				default:

@@ -1,0 +1,4 @@
+calculate.exe obliczna wyrażenia podane w ONP i zamienie je na postać infiksową.
+rpniser.exe zamienia wyrażenia podane w postaci infiksowej na ONP.
+
+make run3 : rpniser zamieni wyrażenia infiksowe z expressions.txt i następnie przekarze je do calculate.exe

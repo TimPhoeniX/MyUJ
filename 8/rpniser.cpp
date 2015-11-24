@@ -43,7 +43,7 @@ int main()
 					Priority.Push(2);
 					Operators.Push(c);
 					break;
-				case '^':
+				case '~':
 					while( !Operators.Empty() && Priority.Top() >= 3)
 					{
 						Priority.Pop();
@@ -52,7 +52,7 @@ int main()
 					Priority.Push(3);
 					Operators.Push(c);
 					break;
-				case '~':
+				case '^':
 					while( !Operators.Empty() && Priority.Top() >= 4)
 					{
 						Priority.Pop();
@@ -75,10 +75,14 @@ int main()
 						c = Operators.Pop();
 					}
 					break;
-				case '0' ... '9':
+				case '0': case '1': case '2': case '3':
+				case '4': case '5': case '6': case '7':
+				case '8': case '9': // Why can't 0 ... 9 be a part of the standard ?!
 					Stream.unget();
 					Stream >> val;
 					std::cout << val << ' ';
+					break;
+				default: 
 					break;
 			}
 		}

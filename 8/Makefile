@@ -4,8 +4,8 @@ Name1= calculate.exe
 Sources1= calculate.cpp
 Name2= rpniser.exe
 Sources2= rpniser.cpp
-Headers= ctl_stack.hpp test.hpp
-files= $(Sources1) $(Sources2) $(Headers) Makefile README
+Headers= ctl_stack.hpp test.hpp ctl_forwardlist.hpp
+files= $(Sources1) $(Sources2) $(Headers) Makefile README 
 .PHONY: default run1 run2 clean tar
 
 default: $(Name)
@@ -23,8 +23,7 @@ run2: $(Name2)
 	./$< < expressions.txt
 
 run3: $(Name1) $(Name2)
-	./$(Name2) < expressions.txt > rpn.txt
-	./$(Name1) < rpn.txt
+	./$(Name2) < expressions.txt | ./$(Name1) > results.txt
 
 clean:
 	rm -rf *~
