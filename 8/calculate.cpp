@@ -1,4 +1,5 @@
 #include "ctl_stack.hpp"
+#include "test.hpp"
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -6,7 +7,9 @@
 
 int main()
 {
+	AssertStack();
 	CTL::Stack<int> Int;
+	CTL::Stack<int> Priority;
 	CTL::Stack<std::string> Expressions;
 	std::string Exp;
 	std::stringstream Stream;
@@ -29,58 +32,77 @@ int main()
 					break;
 				case '+':
 					b = Int.Pop();
-					a = Int.Pop();
 					sb = Expressions.Pop();
+					if(Priority.Pop() <= 1) sb='('+sb+')';
+					a = Int.Pop();
 					sa = Expressions.Pop();
+					if(Priority.Pop() < 1) sa='('+sa+')';
 					Int.Push(a+b);
-					Expressions.Push('('+sa+'+'+sb+')');
+					Expressions.Push(sa+'+'+sb);
+					Priority.Push(1);
 					break;
 				case '-':
 					b = Int.Pop();
-					a = Int.Pop();
 					sb = Expressions.Pop();
+					if(Priority.Pop() <= 1) sb='('+sb+')';
+					a = Int.Pop();
 					sa = Expressions.Pop();
+					if(Priority.Pop() < 1) sa='('+sa+')';
 					Int.Push(a-b);
-					Expressions.Push('('+sa+'-'+sb+')');
+					Expressions.Push(sa+'-'+sb);
+					Priority.Push(1);
 					break;
 				case '*':
 					b = Int.Pop();
-					a = Int.Pop();
 					sb = Expressions.Pop();
+					if(Priority.Pop() <= 2) sb='('+sb+')';
+					a = Int.Pop();
 					sa = Expressions.Pop();
+					if(Priority.Pop() < 2) sa='('+sa+')';
 					Int.Push(a*b);
 					Expressions.Push(sa+'*'+sb);
+					Priority.Push(2);
 					break;
 				case '/':
 					b = Int.Pop();
-					a = Int.Pop();
 					sb = Expressions.Pop();
+					if(Priority.Pop() <= 2) sb='('+sb+')';
+					a = Int.Pop();
 					sa = Expressions.Pop();
+					if(Priority.Pop() < 2) sa='('+sa+')';;
 					Int.Push(a/b);
 					Expressions.Push(sa+'/'+sb);
+					Priority.Push(2);
 					break;
 				case '^':
 					b = Int.Pop();
-					a = Int.Pop();
 					sb = Expressions.Pop();
+					if(Priority.Pop() <= 3) sb='('+sb+')';
+					a = Int.Pop();
 					sa = Expressions.Pop();
+					if(Priority.Pop() < 3) sa='('+sa+')';
 					Int.Push(std::pow(a,b));
-					Expressions.Push('('+sa+")^("+sb+')');
+					Expressions.Push(sa+'^'+sb);
+					Priority.Push(3);
 					break;
 				case '~':
 					a = Int.Pop();
 					sa = Expressions.Pop();
+					if(Priority.Pop() <= 4) sb='('+sb+')';					
 					Int.Push(-a);
-					Expressions.Push("(-"+sa+')');
+					Expressions.Push('~'+sa);
+					Priority.Push(4);
 					break;
 				default:
 					Stream.unget();
 					Stream >> val;
 					Int.Push(val);
 					Expressions.Push(std::to_string(val));
+					Priority.Push(5);
 					break;
 			}
 		}
+		Priority.Pop();
 		std::cout << Int.Pop() << '\n' << Expressions.Pop() << std::endl;
 	}
 	
