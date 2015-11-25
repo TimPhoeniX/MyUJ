@@ -5,7 +5,7 @@ Sources1= calculate.cpp
 Name2= rpniser.exe
 Sources2= rpniser.cpp
 Headers= ctl_stack.hpp test.hpp ctl_forwardlist.hpp
-files= $(Sources1) $(Sources2) $(Headers) Makefile README 
+files= $(Sources1) $(Sources2) $(Headers) Makefile README expressions.txt
 .PHONY: default run1 run2 clean tar
 
 default: $(Name)
@@ -17,7 +17,7 @@ $(Name2): $(Sources2) $(Headers)
 	$(CC) -o $@ $(Sources2) $(CPPFLAGS)
 	
 run1: $(Name1)
-	./$< < rpn_expressions.txt
+	./$<
 
 run2: $(Name2)
 	./$< < expressions.txt
