@@ -1,4 +1,3 @@
-Enter square matrix dimension, please: Enter matrix elements by starting with first row, from left to right, please: 
 L:
 1.000	0.000	0.000	0.000	0.000	
 0.091	1.000	0.000	0.000	0.000	
