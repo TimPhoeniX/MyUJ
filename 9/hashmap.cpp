@@ -4,19 +4,15 @@
 #include <sstream>
 #include <fstream>
 
-int magic = 0;
-
 class Hasher
 {
 public:
 	unsigned int operator()(const std::string& str)
 	{
-		unsigned int hash = magic;
+		unsigned int hash = 0;
 		for(char i : str)
 		{
-			hash+=i;
-			hash*=magic; //1101, 10379
-//			hash=hash*magic+i; //12461
+			hash=hash*12809+i; //12809
 		}
 		return hash;
 	}
@@ -35,50 +31,25 @@ int main(int argc, char** argv)
 	}
 	else if(*argv[1] == 'm')
 	{
-// 		int size = 0;
-// 		std::cin >> size;
-// 		std::cin.get();
-// 		CTL::UnorderedMapPrototype<std::string,std::string,std::equal_to<std::string>,Hasher> map;
-// 		std::string surname;
-// 		std::string name;
-// 		std::string line;
-// 		std::stringstream stream;
-// 		for(int i = 0; i < size; ++i)
-// 		{
-// 			stream.clear();
-// 			std::getline(std::cin,line);
-// 			stream.str(line);
-// 			std::getline(stream,surname,' ');
-// 			while(stream.get() == ' ');
-// 			stream.unget();
-// 			std::getline(stream,name);
-// 			map.Insert(surname,name);
-// 		}
-// 		std::cout << map.getMaxListLen() << ' '  << map.getMedianListLen() << std::endl;
-		for(;magic < 1000000; ++magic)
+		int size = 0;
+		std::cin >> size;
+		std::cin.get();
+		CTL::UnorderedMapPrototype<std::string,std::string,std::equal_to<std::string>,Hasher> map;
+		std::string surname;
+		std::string name;
+		std::string line;
+		std::stringstream stream;
+		for(int i = 0; i < size; ++i)
 		{
-			std::ifstream f("dane_nazwiska.txt");
-			int size = 0;
-			f >> size;
-			f.get();
-			CTL::UnorderedMapPrototype<std::string,std::string,std::equal_to<std::string>,Hasher> map;
-			std::string surname;
-			std::string name;
-			std::string line;
-			std::stringstream stream;
-			for(int i = 0; i < size; ++i)
-			{
-				stream.clear();
-				std::getline(f,line);
-				stream.str(line);
-				std::getline(stream,surname,' ');
-				while(stream.get() == ' ');
-				stream.unget();
-				std::getline(stream,name);
-				map.Insert(surname,name);
-			}
-			std::cout << map.getMaxListLen() << ' '  << map.getMedianListLen() << '\n';
-			f.close();
+			stream.clear();
+			std::getline(std::cin,line);
+			stream.str(line);
+			std::getline(stream,surname,' ');
+			while(stream.get() == ' ');
+			stream.unget();
+			std::getline(stream,name);
+			map.Insert(surname,name);
 		}
+		std::cout << map.getMaxListLen() << ' '  << map.getMedianListLen() << std::endl;
 	}
 }

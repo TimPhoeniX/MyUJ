@@ -1,11 +1,11 @@
-CPPFLAGS= -std=c++11 -Wall -Wextra
-CC = g++
+CPPFLAGS=-std=c++11 -Wall -Wextra
+CC=g++
 Name=hashmap
 Sources=$(Name).cpp
 Exe=$(Name).exe
-Headers= ctl_proto_hashmap.hpp test.hpp ctl_forwardlist.hpp
-files= $(Sources1) $(Headers) Makefile README expressions.txt
-.PHONY: default run1 run2 clean tar
+Headers= ctl_proto_hashmap.hpp test.hpp ctl_forwardlist.hpp ctl_heap_sort.hpp
+files= $(Sources) $(Headers) Makefile dane_nazwiska.txt
+.PHONY: default runt runm clean tar
 
 default: $(Exe)
 
@@ -16,7 +16,7 @@ runt: $(Exe)
 	./$< t
 
 runm: $(Exe)
-	./$< m < dane_nazwiska.txt > test.txt
+	./$< m < dane_nazwiska.txt
 
 clean:
 	rm -rf *~
