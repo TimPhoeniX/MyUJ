@@ -1,7 +1,7 @@
 #include <string>
 #include <sstream>
-#include "ctl_open_map.hpp"
 #include <iostream>
+#include "ctl_open_map.hpp"
 #include <cstdlib>
 
 class Hasher
@@ -42,7 +42,7 @@ class QuadraticHasher : public Hasher
 public:
 	unsigned int operator()(const std::string& str, unsigned int it) const
 	{
-		return this->Hasher::operator()(str)+it+it*it;
+		return this->Hasher::operator()(str)+it+3*it*it;
 	}
 };
 
@@ -78,7 +78,7 @@ public:
 		delete this->Hash;
 	}
 	
-	unsigned int operator()(const std::string& str, unsigned int it)
+	unsigned int operator()(const std::string& str, unsigned int it) const
 	{
 		return this->Hash->operator()(str,it);
 	}
