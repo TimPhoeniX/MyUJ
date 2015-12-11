@@ -5,8 +5,6 @@
 #include <cstdlib>
 #include <fstream>
 
-unsigned int m = 0;
-
 class Hasher
 {
 private:
@@ -30,6 +28,7 @@ public:
 		}
 		return hash;
 	}
+	
 	virtual unsigned int operator()(const std::string& str, unsigned int it) const = 0;
 	
 // 	virtual unsigned int operator()(const std::string& str, unsigned int it) const
@@ -69,16 +68,26 @@ public:
 class DoubleHasher : public Hasher
 {
 private:
-	std::hash<std::string> Secondary = decltype(Secondary)();
+	const unsigned int MagicNumber = 8657;
 public:
 	DoubleHasher()
-	: Hasher(52327)
+	: Hasher(206)
 	{
+	}
+	
+	virtual unsigned int operator()(const std::string& str) const
+	{
+		unsigned int hash = 0;
+		for(char i : str)
+		{
+			hash=hash*this->MagicNumber+i; //12809
+		}
+		return hash;
 	}
 	
 	unsigned int operator()(const std::string& str, unsigned int it) const
 	{
-		return this->Hasher::operator()(str)+it*Secondary(str);
+		return this->Hasher::operator()(str)+it*this->operator()(str);
 	}
 };
 
@@ -135,19 +144,14 @@ int main(int argc, char** argv)
 		return -1;
 	}
 	unsigned int Size = std::atoi(argv[1]);
-//	for(;m < 100000; m++)
+	CTL::OpenMap<std::string,std::string,HasherWrapper> Map(Size,HasherFactory(std::atoi(argv[2])) );
+	std::string Surname, Name;
+	unsigned int Count = 0;
+	while(std::cin >> Surname && Surname.length() > 0)
 	{
-		CTL::OpenMap<std::string,std::string,HasherWrapper> Map(Size,HasherFactory(std::atoi(argv[2])) );
-		std::string Surname, Name;
-		unsigned int Count = 0;
-		std::ifstream s("dane_nazwiska.txt");
-		while(s >> Surname && Surname.length() > 0)
-		{
-			s >> Name;
-			Count+=Map.Insert(Surname,Name);
-		}
-		std::cout << Count << std::endl;
-		s.close();
+		std::cin >> Name;
+		Count+=Map.Insert(Surname,Name);
 	}
+	std::cout << Count << std::endl;
 	return 0;
 }
