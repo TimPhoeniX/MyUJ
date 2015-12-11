@@ -3,10 +3,20 @@
 #include <iostream>
 #include "ctl_open_map.hpp"
 #include <cstdlib>
+#include <fstream>
+
+unsigned int m = 0;
 
 class Hasher
 {
+private:
+	const unsigned int MagicNumber = 0;
 public:
+	Hasher( const unsigned int m)
+	: MagicNumber(m)
+	{
+	}
+	
 	virtual ~Hasher()
 	{
 	}
@@ -16,7 +26,7 @@ public:
 		unsigned int hash = 0;
 		for(char i : str)
 		{
-			hash=hash*12809+i; //12809
+			hash=hash*MagicNumber+i; //12809
 		}
 		return hash;
 	}
@@ -31,6 +41,11 @@ public:
 class LinearHasher : public Hasher
 {
 public:
+	LinearHasher()
+	: Hasher(26514)
+	{
+	}
+	
 	unsigned int operator()(const std::string& str, unsigned int it) const
 	{
 		return this->Hasher::operator()(str)+it;
@@ -40,6 +55,11 @@ public:
 class QuadraticHasher : public Hasher
 {
 public:
+	QuadraticHasher()
+	: Hasher(75671)
+	{
+	}
+	
 	unsigned int operator()(const std::string& str, unsigned int it) const
 	{
 		return this->Hasher::operator()(str)+it+3*it*it;
@@ -51,6 +71,11 @@ class DoubleHasher : public Hasher
 private:
 	std::hash<std::string> Secondary = decltype(Secondary)();
 public:
+	DoubleHasher()
+	: Hasher(52327)
+	{
+	}
+	
 	unsigned int operator()(const std::string& str, unsigned int it) const
 	{
 		return this->Hasher::operator()(str)+it*Secondary(str);
@@ -110,14 +135,19 @@ int main(int argc, char** argv)
 		return -1;
 	}
 	unsigned int Size = std::atoi(argv[1]);
-	CTL::OpenMap<std::string,std::string,HasherWrapper> Map(Size,HasherFactory(std::atoi(argv[2])) );
-	std::string Surname, Name;
-	unsigned int Count = 0;
-	while(std::cin >> Surname && Surname.length() > 0)
+//	for(;m < 100000; m++)
 	{
-		std::cin >> Name;
-		Count+=Map.Insert(Surname,Name);
+		CTL::OpenMap<std::string,std::string,HasherWrapper> Map(Size,HasherFactory(std::atoi(argv[2])) );
+		std::string Surname, Name;
+		unsigned int Count = 0;
+		std::ifstream s("dane_nazwiska.txt");
+		while(s >> Surname && Surname.length() > 0)
+		{
+			s >> Name;
+			Count+=Map.Insert(Surname,Name);
+		}
+		std::cout << Count << std::endl;
+		s.close();
 	}
-	std::cout << Count << std::endl;
 	return 0;
 }
