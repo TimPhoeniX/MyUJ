@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Compiled Object files
 *.slo
 *.lo
@@ -34,3 +35,35 @@
 *.gz
 *.zip
 >>>>>>> a8c13357ea9a8c65ba09bef5802d1508d65709f7
+=======
+*.class
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+#temp Files
+*~
+
+#Files
+P4/AbstractRoom.java
+P5/PlatypusAbstractFinder.java
+P5/RPNLogicInterface.java
+P6/ValueI.java
+P6/ObjectExchangeInterface.java
+P7/KalkulatorI.java
+P8/WyjatkowySaperGameInterface.java
+P8/WyjatkowySaperPlayerInterface.java
+P9/HotelReservationInterface.java
+
+# External tests
+P4/PlatypusFinderTester1.java
+P5/Tester.java
+>>>>>>> f49a80a94cc4fe043166d211398efd75c44fac50
