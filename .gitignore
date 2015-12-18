@@ -26,7 +26,6 @@
 *.exe
 *.out
 *.app
-<<<<<<< HEAD
 
 # temporary files
 *~
@@ -94,5 +93,4 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
-*.goutputstream-T2QUUX
-
+*.goutputstream*
