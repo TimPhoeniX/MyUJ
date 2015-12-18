@@ -21,13 +21,14 @@ class Stay implements HotelReservationInterface.StayAtTheHotel, Runnable
 	
 	public void start()
 	{
+		System.out.println(this.Hotel.getNumberOfFreeRooms());
 		this.count = (new Date()).getTime();
 	}
 	
 	public void stop()
 	{
 		this.count = (new Date()).getTime()-this.count;
-		if( count < time && time+time*.1 < count)
+		if( count < time || time+time*.1 < count)
 			System.err.println("Error - Expected time: "+this.time+", Was: "+this.count);
 		else System.out.println("OK - Expected time: "+this.time+", Was: "+this.count);
 	}
@@ -106,7 +107,7 @@ class HotelReservationTester
 	{
 		HotelEngine Hotel = new HotelEngine(new HotelReservation());
 		Hotel.setRooms(new int[][]{{8,9},{7,9},{6,9},{5,9},{4,9},{3,9},{2,9},{1,9}});
-		int Guests = 10;
+		int Guests = 50;
 		while(Guests-- > 0)
 		{
 			Hotel.getRandomStayThread().start();

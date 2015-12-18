@@ -7,35 +7,13 @@ class HotelReservation implements HotelReservationInterface
 	Map<Integer,Integer> Rooms = null;
 	Map<Integer,Integer> FreeRooms = null;
 	
-// 	class StayAtTheHotelHandler implements Runnable
-// 	{
-// 		HotelReservationInterface.StayAtTheHotel stay = null;
-// 		Map<Integer,Integer> req = null;
-// 		
-// 		public StayAtTheHotelHandler(Map<Integer,Integer> requirements, HotelReservationInterface.StayAtTheHotel obj)
-// 		{
-// 			this.req = requirements;
-// 			this.stay = obj;
-// 		}
-// 		
-// 		public void run()
-// 		{
-// 			long time = this.stay.getPeriodOfTime();
-// 			this.stay.start();
-// 			try{ Thread.sleep(time); }
-// 			catch(InterruptedException e) { }
-// 			this.stay.stop();
-// 			HotelReservation.this.freeRooms(this.req);
-// 		}
-// 	}
-	
 	private boolean RequirementsPossible(Map<Integer,Integer> requirements)
 	{
 		for(Map.Entry<Integer,Integer> e : requirements.entrySet())
 		{
 			Integer i = this.Rooms.get(e.getKey());
 			if(i == null) return false;
-			if(e.getValue().intValue() > i.intValue()) return false;
+			if(e.getValue() > i) return false;
 		}
 		return true;
 	}
@@ -48,7 +26,7 @@ class HotelReservation implements HotelReservationInterface
 			{
 				Integer i = this.FreeRooms.get(e.getKey());
 				if(i == null) return false;
-				if(e.getValue().intValue() > i.intValue()) return false;
+				if(e.getValue() > i) return false;
 			}
 		}
 		return true;
@@ -60,7 +38,7 @@ class HotelReservation implements HotelReservationInterface
 		{
 			for(Map.Entry<Integer,Integer> e : requirements.entrySet())
 			{
-				this.FreeRooms.put(e.getKey(),new Integer(this.FreeRooms.get(e.getKey()).intValue()-e.getValue().intValue()));
+				this.FreeRooms.put(e.getKey(),new Integer(this.FreeRooms.get(e.getKey())-e.getValue()));
 			}
 		}
 	}
@@ -71,7 +49,7 @@ class HotelReservation implements HotelReservationInterface
 		{
 			for(Map.Entry<Integer,Integer> e : requirements.entrySet())
 			{
-				this.FreeRooms.put(e.getKey(),new Integer(this.FreeRooms.get(e.getKey()).intValue()+e.getValue().intValue()));
+				this.FreeRooms.put(e.getKey(),new Integer(this.FreeRooms.get(e.getKey())+e.getValue()));
 			}
 			this.FreeRooms.notifyAll();
 		}
@@ -80,20 +58,7 @@ class HotelReservation implements HotelReservationInterface
 	public void setNumberOfRooms(Map<Integer,Integer> sizeNumber)
 	{
 		this.Rooms = sizeNumber;
-		this.FreeRooms = new TreeMap<Integer,Integer>
-		(
-			new Comparator<Integer>()
-			{
-				public int compare(Integer lhs, Integer rhs)
-				{
-					return Integer.compare(rhs,lhs);
-				}
-			}
-		);
-		for(Map.Entry<Integer,Integer> e : this.Rooms.entrySet())
-		{
-			this.FreeRooms.put(e.getKey(),e.getValue());
-		}
+		this.FreeRooms = new TreeMap<Integer,Integer>(sizeNumber);
 	}
 	
 	public Map<Integer,Integer> getNumberOfFreeRooms()
@@ -111,13 +76,10 @@ class HotelReservation implements HotelReservationInterface
 		{
 			while(!this.enoughRooms(requirements))
 			{
-				try{ this.FreeRooms.wait();
-				}
+				try{ this.FreeRooms.wait();}
 				catch(InterruptedException e) { }
 			}
-//			Thread handler = new Thread(this.new StayAtTheHotelHandler(requirements,obj));
 			this.takeRooms(requirements);
-//			handler.start();
 		}
 		long time = obj.getPeriodOfTime();
 		obj.start();

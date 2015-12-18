@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 406412f2c296cebd4241de439192949d91d834d6
 # Compiled Object files
 *.slo
 *.lo
@@ -30,16 +26,11 @@
 *.exe
 *.out
 *.app
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 
 # temporary files
 *~
 *.gz
 *.zip
->>>>>>> a8c13357ea9a8c65ba09bef5802d1508d65709f7
-=======
 *.class
 
 # Mobile Tools for Java (J2ME)
@@ -55,23 +46,6 @@ hs_err_pid*
 
 #temp Files
 *~
-
-#Files
-P4/AbstractRoom.java
-P5/PlatypusAbstractFinder.java
-P5/RPNLogicInterface.java
-P6/ValueI.java
-P6/ObjectExchangeInterface.java
-P7/KalkulatorI.java
-P8/WyjatkowySaperGameInterface.java
-P8/WyjatkowySaperPlayerInterface.java
-P9/HotelReservationInterface.java
-
-# External tests
-P4/PlatypusFinderTester1.java
-P5/Tester.java
->>>>>>> f49a80a94cc4fe043166d211398efd75c44fac50
-=======
 
 # =========================
 # Operating System Files
@@ -120,4 +94,4 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 *.goutputstream-T2QUUX
->>>>>>> 406412f2c296cebd4241de439192949d91d834d6
+
