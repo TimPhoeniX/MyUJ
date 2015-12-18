@@ -1,0 +1,28 @@
+Fork by Piotr Grudzien
+
+fork.tar.gz powinien zawierać:
+README
+makefile
+fork.c
+
+program można uruchomić poprzez komendę "make run"
+
+Program wypisuje identyfikatory UID, GID, PID, PPID i PGID dla głównego procesu macierzystego
+a nastepnie wywołuje 3 razy fork i dla każdego procesu potomnego wypisuje identyfikatory,
+Identyfikatory sa wypisywane pokoleniami.
+
+Poza głównym procesem macierzystym powstanie 7 procesow potomnych.
+Dzieje się tak dlatego, że w pierwszym obiegu pętli od powstaje drugi proces.
+W drugim obiegu każdy z tych procesow znowu dzieli się na 2 co daje już 4 procesy.
+W trzecim obiegu każdy z nich znowu dzieli się co daje łącznie 8 procesów, z czego
+1 jest głównym macierzystym, a 7 potomnymi.
+
+              0
+            / | \
+           /  |  \
+          /   |   \
+         1    \    \
+        / \    \    \
+       /   3    2    \
+      /     \    \    \
+     5       7    6    4

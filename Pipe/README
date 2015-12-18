@@ -1,0 +1,13 @@
+Pipe by Piotr Grudzien
+
+pipe.tar.gz powinien zawierać:
+README
+Makefile
+main.c
+pipe.c
+pipe.h
+source.txt
+
+Program można uruchomić poprzez komendę "make run".
+
+Program, wykorzystując potok nienazwany, przeniesie zawartość pliku source.txt do nowo powstałego pliku copy.txt.

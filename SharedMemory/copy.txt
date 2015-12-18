@@ -1,0 +1,15 @@
+The C++ library includes the same definitions as the C language library
+organized in the same structure of header files, with the following differences:
+Each header file has the same name as the C language version but with a "c" prefix and no extension.
+For example, the C++ equivalent for the C language header file <stdlib.h> is <cstdlib>.
+Every element of the library is defined within the std namespace.
+Nevertheless, for compatibility with C, the traditional header names name.h (like stdlib.h) are also provided with the same definitions within the global namespace.
+In the examples provided in this reference, this version is used so that the examples are fully C-compatible, although its use is deprecated in C++.
+
+The are also certain specific changes in the C++ implementation:
+wchar_t, char16_t, char32_t and bool are fundamental types in C++ and therefore are not defined in the corresponding header where they appear in C.
+The same applies to several macros in the header <iso646.h>, which are keywords in C++.
+The following functions have changes in their declarations related to the constness of their parameters: strchr, strpbrk, strrchr, strstr, memchr.
+The functions atexit, exit and abort, defined in <cstdlib> have additions to their behavior in C++.
+Overloaded versions of some functions are provided with additional types as parameters and the same semantics,
+like float and long double versions of the functions in the cmath header file, or long versions for abs and div.

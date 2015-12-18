@@ -1,0 +1,18 @@
+MessegeQueues by Piotr Grudzień
+
+messagequeues.tar.gz powinien zawierać:
+serwer.c
+klient.c
+mqueues.c
+mqueues.c
+Makefile
+README
+
+serwer.exe tworzy kolejkę komunikatów, a następnie czeka aż w kolejce pojawi się komunikat wysłany do niego.
+Odbiera komunikat, zamienia litery w dołączonym napisie na dużę, a następnie odsyła komunikat.
+Po pięciu sekundach bezczynności (nie ma komunikatów do sewera) kolejka komunikatów zostaje usunięta.
+
+klient.exe wysyła do serwera komunikat z napiem zadanym jako argument wywołania, nastepnie odbiera odpowiedni komunikaty
+i wypisuje otrzymany w tym komunikacie napis.
+
+Uruchamiając programy za pomocą make run uruchomiane zostaną serwer i 4 klienci w różnych terminalach za pomocą xterm.

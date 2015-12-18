@@ -1,0 +1,20 @@
+Signals by Piotr Grudzień
+
+signals.tar.gz powinien zawierać
+README
+Makefile
+sig1.c
+sig2.c
+sig3.c
+
+Pierwszy program domyślne ignoruje SIGQUIT i obsługuje SIGINT wypisując komunikat "Otrzymano SIGINT".
+Dodając argument "1" program obsłuży oba sygnały wypisując komunikat "Otrzymano SIG...".
+Dodając argument "2" program zignoruje oba sygnały.
+Program sprawdzi tylko pierwszy argument.
+Można go uruchomić poprzez "make run". (Uruchomienia bez argumentów)
+
+Drugi program za pomocą fork i execl inicjalizuje proces potomny pierwszym programem, a następnie wysyła do niego SIGINT.
+Można go uruchomić poprzez "make run2".
+
+Trzeci program korzysta z fork i execl w pętli tworząc łącznie 6 procesów potomnych, które inicjalizuje programem pierwszym do których nastepnie wysyła SIGINT.
+Można go uruchomić porzez "make run3".

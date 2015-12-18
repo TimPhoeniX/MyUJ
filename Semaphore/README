@@ -1,0 +1,15 @@
+Semaphore by Piotr Grudzień
+
+semaphore.tar.gz powinien zawierać:
+README
+Makefile
+semaphore.c
+semaphore.h
+prog.c
+multiplier.c
+
+Program multiplier.exe uruchomiony komendą make run stworzy semafor, a następnie z użyciem fork() i execl()
+stworzy 3 instancje prog.exe, które symulują programy z sekcją krytyczną. Każdy z nich wchodzi 2-3 razy do sekcji krytycznej i korzysta z niej 2-4 sekundy.
+gry ostatni prog.exe zakoczy działanie semafor zostanie usunięty przez multiplier.exe.
+
+multiplier.exe należy zawsze uruchamiac z argumentem określającym ilość procesów potomnych jaka ma powstać.

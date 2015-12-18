@@ -1,0 +1,23 @@
+SharedMemory by Piotr Grudzień
+
+sharedmemory.tar.gz powinien zawierać
+README
+Makefile
+semaphore.c
+semaphore.h
+sharedmem.c
+sharedmem.h
+multiprod.c
+multikons.c
+master.c
+
+master.exe stwarza semafor oraz pamięć dzieloną, uruchamia z użyciem fork i execl
+podane ilości producentów(multiprod.exe) i konsumentów(multikons.exe), które przenoszą zawartość source.txt do copy.txt
+poprzez bufor umieszczony w pamięci dzielonej.
+Po zakończeniu usuwa semafor i pamięć dzieloną.
+
+Uruchamiając programy poprzez make run na samym początku usunięty zastanie copy.txt, a po zakończeniu działania
+programu source.txt i copy.txt zostaną sprawdzone przez diff.
+
+Używając polecenia make powstaną również biblioteki statyczne
+i współdzielone dla semaphore.c i sharedmem.c, które zostaną umieszczone w katalogu ./dir.
