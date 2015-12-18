@@ -1,0 +1,7 @@
+Sort.exe
+
+Program demostruje różnice między sortowaniem stabilym i niestabilnym.
+
+1. Sortowania po obu kluczach, dla sortowania stabilnego w wynikach przy następych literach powinny pojawić się liczby w porządku rosnącym.
+2. Sortowania po liczbach, sortowanie stabilne powinno zachować wewnętrzną kolejność rosnącą liter.
+3. Sortowania po literach, sortowanie stabilne powinno zachować wewnętrzną kolejność liczb.
