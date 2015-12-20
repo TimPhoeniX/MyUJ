@@ -9,6 +9,7 @@ class HotelReservation implements HotelReservationInterface
 	
 	private boolean RequirementsPossible(Map<Integer,Integer> requirements)
 	{
+		if(requirements == null) return true;
 		for(Map.Entry<Integer,Integer> e : requirements.entrySet())
 		{
 			Integer i = this.Rooms.get(e.getKey());
@@ -20,6 +21,7 @@ class HotelReservation implements HotelReservationInterface
 	
 	private boolean enoughRooms(Map<Integer,Integer> requirements)
 	{
+		if(requirements == null) return true;
 		synchronized( this.FreeRooms )
 		{
 			for(Map.Entry<Integer,Integer> e : requirements.entrySet())
@@ -34,6 +36,7 @@ class HotelReservation implements HotelReservationInterface
 	
 	private void takeRooms(Map<Integer,Integer> requirements)
 	{
+		if(requirements == null) return;
 		synchronized( this.FreeRooms )
 		{
 			for(Map.Entry<Integer,Integer> e : requirements.entrySet())
@@ -45,6 +48,7 @@ class HotelReservation implements HotelReservationInterface
 	
 	private void freeRooms(Map<Integer,Integer> requirements)
 	{
+		if(requirements == null) return;
 		synchronized( this.FreeRooms )
 		{
 			for(Map.Entry<Integer,Integer> e : requirements.entrySet())
@@ -68,6 +72,7 @@ class HotelReservation implements HotelReservationInterface
 	
 	public void reservation(Map<Integer,Integer> requirements, StayAtTheHotel obj)
 	{
+		if(obj == null) return;
 		if(!this.RequirementsPossible(requirements))
 		{
 			return;
