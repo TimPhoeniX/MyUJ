@@ -4,7 +4,8 @@ Name=bst
 Sources=$(Name).cpp
 Exe=$(Name).exe
 Headers= ctl_bst.hpp
-files= $(Sources) $(Headers) Makefile dane_nazwiska.txt
+files= $(Sources) $(Headers) Makefile input.txt
+
 .PHONY: default run clean tar
 
 default: $(Exe)

@@ -8,6 +8,7 @@
 
 #include <functional>
 #include <stdexcept>
+#include <iostream>
 
 namespace CTL
 {
@@ -83,6 +84,25 @@ namespace CTL
 		{
 			this->Left=l;
 			this->Right=r;
+		}
+		
+		void PreorderPrint(std::ostream& out)
+		{
+			out << this->Value << ' ';
+			if(this->Left) this->Left->PreorderPrint(out);
+			if(this->Right) return this->Right->PreorderPrint(out);
+		}
+		
+		void PostorderPrint(std::ostream& out)
+		{
+			if(this->Left) this->Left->PostorderPrint(out);
+			if(this->Right) this->Right->PostorderPrint(out);
+			out << this->Value<< ' ';
+		}
+		
+		void ValueSwap(NodeType*const n)
+		{
+			std::swap(this->Value,n->Value); //May be costly, but easier to implement.
 		}
 	};
 	
@@ -173,6 +193,7 @@ namespace CTL
 						{
 							this->Previous=this->Current;
 							this->Current=this->Current->Right;
+							this->TraverseDownLeft();
 						}
 						else
 						{
@@ -276,18 +297,52 @@ namespace CTL
 		NodeType* Find(const ValueType& e) //Easier to return null, i'm not in mood for throwing
 		{
 			auto Current = this->Root;
-			while(Current && (this->Comparator(e,Current->Value) || this->Comparator(Current->Value,e)) )
+			while(Current)
 			{
 				if(this->Comparator(e, Current->Value))
 				{
 					Current=Current->Left;
 				}
-				else
+				else if(this->Comparator(Current->Value, e))
 				{
 					Current=Current->Right;
 				}
+				else return Current;
 			}
 			return Current;
+		}
+		
+		void Delete(NodeType*const n)
+		{
+			if(!n) return;
+			auto& link = (n->Parent ? (n==n->Parent->Left ? n->Parent->Left : n->Parent->Right) : this->Root);
+			if(n->Left)
+			{
+				if(n->Right)
+				{
+					auto succesor = n->Right;
+					while(succesor->Left)
+					{
+						succesor=succesor->Left;
+					}
+					n->ValueSwap(succesor);
+					this->Delete(succesor);
+				}
+				else
+				{
+					link =  n->Left;
+					n->Left->Parent=n->Parent;
+					n->UnhookLeft();
+					delete n;
+				}
+			}
+			else
+			{
+				link = n->Right;
+				if(n->Right) n->Right->Parent=n->Parent;
+				n->UnhookRight();
+				delete n;
+			}
 		}
 		
 		ValueType& Minimum()
@@ -310,6 +365,64 @@ namespace CTL
 				Current=Current->Right;
 			}
 			return Current->Value;
+		}
+		
+		void InorderPrint(std::ostream& out)
+		{
+			auto end = this->End();
+			for(auto i = this->Begin(); i != end; ++i)
+			{
+				out << *i << ' ';
+			}
+			out << '\n';
+		}
+		
+		void PreorderPrint(std::ostream& out)
+		{
+			if(this->Root) this->Root->PreorderPrint(out);
+			out << '\n';
+		}
+		
+		void PostorderPrint(std::ostream& out)
+		{
+			if(this->Root) this->Root->PostorderPrint(out);
+			out << '\n';
+		}
+		
+		void RestoreWithPreorder(std::istream& in)
+		{
+			this->Clear();
+			int size = 0;
+			ValueType val;
+			in >> size;
+			while(size--)
+			{
+				in >> val;
+				this->Insert(val);
+			}
+		}
+		
+		void RestoreWithPostorder(std::istream& in)
+		{
+			this->Clear();
+			int size = 0;
+			in >> size;
+			ValueType* queue = new ValueType[size];
+			for(int i = 0; i < size; ++i)
+			{
+				in >> queue[i];
+			}
+			for(int i = size-1; i >= 0; --i)
+			{
+				this->Insert(queue[i]);
+			}
+			delete[] queue;
+		}
+		
+		void Clear()
+		{
+			delete this->Root;
+			this->Root = nullptr;
 		}
 		
 		Iterator Begin()

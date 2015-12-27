@@ -9,19 +9,50 @@ template class CTL::BSTree<int>;
 int main()
 {
 	CTL::BSTree<int> tree;
-	std::default_random_engine engine(45223);
-	std::uniform_int_distribution<int> dist(-10,111);
-	auto random = std::bind(dist,engine);
-	for(int i = 0; i < 20; ++i)
+	char c = 0;
+	int val= 0;
+	bool Working =- true;
+	while(Working)
 	{
-		auto s = random();
-		std::cout << s << ' ';
-		tree.Insert(s);
+		std::cin >> c;
+		switch(c)
+		{
+			case 'w':
+				std::cin >> val;
+				tree.Insert(val);
+				break;
+			case 'u':
+				std::cin >> val;
+				tree.Delete(tree.Find(val));
+				break;
+			case 'M':
+				std::cout << tree.Maximum();
+				std::cout << '\n';
+				break;
+			case 'm':
+				std::cout << tree.Minimum();
+				std::cout << '\n';
+				break;
+			case 'i':
+				tree.InorderPrint(std::cout);
+				break;
+			case 'R':
+				tree.RestoreWithPreorder(std::cin);
+				break;
+			case 'r':
+				tree.PreorderPrint(std::cout);
+				break;
+			case 'O':
+				tree.RestoreWithPostorder(std::cin);
+				break;
+			case 'o':
+				tree.PostorderPrint(std::cout);
+				break;
+			case 'q':
+				Working=false;
+				break;
+			default:
+				break;
+		}
 	}
-	std::cout << std::endl;
-	for(auto it: tree)
-	{
-		std::cout << it << std::endl;
-	}
-	return 0;
 }
