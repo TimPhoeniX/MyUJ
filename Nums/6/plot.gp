@@ -1,4 +1,4 @@
-set term png size 2000
+set term png size 1000
 set output "inter.png"
 
 set title "Cubic Interpolation"

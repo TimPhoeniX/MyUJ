@@ -5,6 +5,8 @@
 #ifndef _CTL_NCI_HPP_
 #define _CTL_NCI_HPP_
 
+#include <cmath>
+
 namespace CTL
 {
 	template<typename T>
@@ -41,18 +43,18 @@ namespace CTL
 		{
 			auto n = p-2;
 			T* S = new T[n];
-			for(int i = 0; i < p; ++i)
+			for(unsigned int i = 0; i < n; ++i)
 			{
 				S[i]=(this->Values[i]-2*this->Values[i+1]+this->Values[i+2])*6/(this->Distance*this->Distance);
 			}
 			T* Sup = new T[n-1];
 			Sup[0]=T(1)/T(4);
-			for(int i = 1; i < n-1; ++i)
+			for(unsigned int i = 1; i < n-1; ++i)
 			{
 				Sup[i]=T(1)/(T(4)-Sup[i-1]);
 			}
 			S[0]=S[0]/T(4);
-			for(int i = 1; i < n; ++i)
+			for(unsigned int i = 1; i < n; ++i)
 			{
 				S[i]=(S[i]-S[i-1])/(4-Sup[i-1]);
 			}
@@ -72,7 +74,7 @@ namespace CTL
 		{
 			this->EndPoints = new T[p];
 			this->EndPoints[0] = first;
-			for(int i = 1; i < p; ++i)
+			for(unsigned int i = 1; i < p; ++i)
 			{
 				this->EndPoints[i]=this->EndPoints[i-1]+T(1);
 			}
