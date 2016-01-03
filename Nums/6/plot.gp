@@ -1,5 +1,5 @@
-set term png size 1000
-set output "inter.png"
+set term svg size 2000 1000
+set output "inter.svg"
 
 set title "Cubic Interpolation"
 set style data lines

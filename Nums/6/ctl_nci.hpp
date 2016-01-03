@@ -31,12 +31,12 @@ namespace CTL
 		
 		T Ccoef(const T A)
 		{
-			return ( A*(A*A-A)*this->Distance*this->Distance/T(6) );
+			return ( A*(A*A-1)*this->Distance*this->Distance/T(6) );
 		}
 		
 		T Dcoef(const T B)
 		{
-			return ( B*(B*B-B)*this->Distance*this->Distance/T(6) );
+			return ( B*(B*B-1)*this->Distance*this->Distance/T(6) );
 		}
 		
 		void Interpolate(unsigned int p)

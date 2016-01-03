@@ -18,7 +18,7 @@ int main()
 		std::cout << "# " << v[i] << '\n';
 	}
 	CTL::NCIFunction_CD<double> fun(1.,1.,10,v);
-	for(double i = 1.; i < 10; i+=0.0001)
+	for(double i = 1.; i < 10; i+=0.00001)
 	{
 		std::cout << i << '\t' << fun(i) << '\n';
 	}
