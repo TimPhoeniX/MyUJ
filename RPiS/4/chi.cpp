@@ -6,10 +6,12 @@
 #include <fstream>
 #include <iostream>
 
-double ChiSquare(int n, double x)
+double ChiSquare(const unsigned int n, double x)
 {
 //	return std::pow(x*0.5,n*0.5-1)*std::exp(-x*0.5)*0.5/std::tgamma(n*0.5);
-	return std::pow(x,n*0.5-1)*std::exp(-x*0.5)*0.5/(std::pow(2,n/2.)*std::tgamma(n*0.5));
+	if(x==1.) std::cerr << std::pow(x/2.,n/2.-1.) << ' ' << std::exp(-x/2) << ' ' << std::tgamma(n/2.) << '\n'; 
+	return std::pow(x/2.,n/2.-1.)*std::exp(-x/2)/2./std::tgamma(n/2.);
+//	return std::pow(x,n*0.5-1)*std::exp(-x*0.5)*0.5/(std::pow(2,n/2.)*std::tgamma(n*0.5));
 }
 
 template<typename RealType = double>
@@ -67,20 +69,19 @@ int main()
 	double Var = 0;
 	for(int i = 0; i < Tries(); ++i)
 	{
-//		Var = Test();
 		Var = Chi3();
 		++Histogram[int(floor(1000.*Var))];
 	}
 	for(auto& h : Histogram)
 	{
-		h.second/=(double(Tries())*0.0001);
+		h.second/=(double(Tries())*0.001);
 	}
 	std::ofstream results("results.txt");
 	results.precision(16);
 	results << std::fixed;
 	for(auto h : Histogram)
 	{
-		results << h.first*0.0001 << '\t' << h.second << '\t' << ChiSquare(3,h.first*0.0001) << '\n';
+		results << h.first*0.001 << '\t' << h.second << '\t' << ChiSquare(3,h.first*0.001) << '\n';
 	}
 	results.close();
 	return 0;
