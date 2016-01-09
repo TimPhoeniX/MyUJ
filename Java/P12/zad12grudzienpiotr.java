@@ -83,6 +83,8 @@ class ObjectToDOM implements ObjectToDOMInterface
 		{
 			n.setAttribute("type","Object");
 			Element name = this.doc.createElement("className");
+			try{ cl = f.get(o).getClass();}
+			catch(Exception e) { }
 			Text className = this.doc.createTextNode(cl.getSimpleName());
 			n.appendChild(name).appendChild(className);
 			Element state = this.doc.createElement("classState");
