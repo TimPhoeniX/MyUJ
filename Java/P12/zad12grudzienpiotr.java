@@ -6,40 +6,6 @@ import java.util.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-
-interface inter
-{
-	public void test();
-}
-
-class test1 implements inter
-{
-	public Integer in = 0;
-	public int i = 0;
-	
-	public test1( int i , int in )
-	{
-		this.in = in;
-		this.i = i;
-	}
-	
-	public void test()
-	{
-	}
-}
-
-class test2
-{
-	public test1 a = new test1(1,2);
-	public test1 b = new test1(3,4);
-	public test1 c = null;
-	public inter d = new test1(6,4);
-	
-	public test2()
-	{
-	}
-}
-
 class ObjectToDOM implements ObjectToDOMInterface
 {
 	private static final Set<Class> wrappers = new HashSet<>(Arrays.asList(
@@ -61,23 +27,15 @@ class ObjectToDOM implements ObjectToDOMInterface
 		if(cl.isPrimitive() || this.isWrapperType(cl) )
 		{
 			n.setAttribute("type",cl.getSimpleName());
-			if(cl.isPrimitive())
+			try
 			{
-				try
+				if(cl.isPrimitive())
 				{
 					cl = f.get(o).getClass();
-					n.appendChild(doc.createTextNode( cl.cast(f.get(o)).toString()));
 				}
-				catch(Exception e) { }
+				n.appendChild(doc.createTextNode( cl.cast(f.get(o)).toString()));
 			}
-			else
-			{
-				try
-				{
-					n.appendChild(doc.createTextNode( cl.cast(f.get(o)).toString()));
-				}
-				catch(Exception e) { }
-			}
+			catch(Exception e) { }
 		}
 		else
 		{
@@ -131,20 +89,5 @@ class ObjectToDOM implements ObjectToDOMInterface
 		Document holder = this.doc;
 		this.doc = null;
 		return holder;
-	}
-	
-	public static void main(String[] args) throws TransformerException
-	{
-		ObjectToDOM DOMer = new ObjectToDOM();
-		Document doc = DOMer.getDocument(new test2());
-		
-		TransformerFactory tf = TransformerFactory.newInstance();
-		Transformer t = tf.newTransformer();
-		StreamResult result =  new StreamResult(System.out);
-		
-		t.setOutputProperty(OutputKeys.INDENT, "yes");
-		t.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-		
-		t.transform( new DOMSource( doc ), result);
 	}
 }
