@@ -14,6 +14,7 @@ Realtype SecantMethod(Realtype x1, Realtype x2, fun& f, unsigned int limit = 100
 {
 	Realtype f1=f(x1);
 	Realtype f2=f(x2);
+	if(f1==f2) return std::numeric_limits<Realtype>::quiet_NaN();
 	Realtype x3=(f1*x2-f2*x1)/(f1-f2);
 	while(std::abs(f(x3))>Epsilon<Realtype>(46) && limit--)
 	{
