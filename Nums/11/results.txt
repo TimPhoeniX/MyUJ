@@ -1,0 +1,74 @@
+g++ -o integrator.exe integrator.cpp -std=c++11 -Wall -Wextra
+./integrator.exe
+Number of rolls: 1000
+MC: 1.0000000000 Analitic: 1.0000000000 Absolute Difference: 0.0000000000
+MC: 0.7980000000 Analitic: 0.7853981634 Absolute Difference: 0.0126018366
+MC: 0.5570000000 Analitic: 0.5235987756 Absolute Difference: 0.0334012244
+MC: 0.2820000000 Analitic: 0.3084251375 Absolute Difference: 0.0264251375
+MC: 0.1670000000 Analitic: 0.1644934067 Absolute Difference: 0.0025065933
+MC: 0.0790000000 Analitic: 0.0807455122 Absolute Difference: 0.0017455122
+MC: 0.0360000000 Analitic: 0.0369122341 Absolute Difference: 0.0009122341
+MC: 0.0220000000 Analitic: 0.0158543442 Absolute Difference: 0.0061456558
+MC: 0.0090000000 Analitic: 0.0064424002 Absolute Difference: 0.0025575998
+MC: 0.0020000000 Analitic: 0.0024903946 Absolute Difference: 0.0004903946
+
+Number of rolls: 10000
+MC: 1.0000000000 Analitic: 1.0000000000 Absolute Difference: 0.0000000000
+MC: 0.7933000000 Analitic: 0.7853981634 Absolute Difference: 0.0079018366
+MC: 0.5204000000 Analitic: 0.5235987756 Absolute Difference: 0.0031987756
+MC: 0.3100000000 Analitic: 0.3084251375 Absolute Difference: 0.0015748625
+MC: 0.1750000000 Analitic: 0.1644934067 Absolute Difference: 0.0105065933
+MC: 0.0778000000 Analitic: 0.0807455122 Absolute Difference: 0.0029455122
+MC: 0.0362000000 Analitic: 0.0369122341 Absolute Difference: 0.0007122341
+MC: 0.0163000000 Analitic: 0.0158543442 Absolute Difference: 0.0004456558
+MC: 0.0078000000 Analitic: 0.0064424002 Absolute Difference: 0.0013575998
+MC: 0.0023000000 Analitic: 0.0024903946 Absolute Difference: 0.0001903946
+
+Number of rolls: 100000
+MC: 1.0000000000 Analitic: 1.0000000000 Absolute Difference: 0.0000000000
+MC: 0.7853400000 Analitic: 0.7853981634 Absolute Difference: 0.0000581634
+MC: 0.5216800000 Analitic: 0.5235987756 Absolute Difference: 0.0019187756
+MC: 0.3067600000 Analitic: 0.3084251375 Absolute Difference: 0.0016651375
+MC: 0.1637900000 Analitic: 0.1644934067 Absolute Difference: 0.0007034067
+MC: 0.0802900000 Analitic: 0.0807455122 Absolute Difference: 0.0004555122
+MC: 0.0365000000 Analitic: 0.0369122341 Absolute Difference: 0.0004122341
+MC: 0.0168900000 Analitic: 0.0158543442 Absolute Difference: 0.0010356558
+MC: 0.0067800000 Analitic: 0.0064424002 Absolute Difference: 0.0003375998
+MC: 0.0024700000 Analitic: 0.0024903946 Absolute Difference: 0.0000203946
+
+Number of rolls: 1000000
+MC: 1.0000000000 Analitic: 1.0000000000 Absolute Difference: 0.0000000000
+MC: 0.7855280000 Analitic: 0.7853981634 Absolute Difference: 0.0001298366
+MC: 0.5233710000 Analitic: 0.5235987756 Absolute Difference: 0.0002277756
+MC: 0.3084310000 Analitic: 0.3084251375 Absolute Difference: 0.0000058625
+MC: 0.1650410000 Analitic: 0.1644934067 Absolute Difference: 0.0005475933
+MC: 0.0810670000 Analitic: 0.0807455122 Absolute Difference: 0.0003214878
+MC: 0.0371860000 Analitic: 0.0369122341 Absolute Difference: 0.0002737659
+MC: 0.0159640000 Analitic: 0.0158543442 Absolute Difference: 0.0001096558
+MC: 0.0064440000 Analitic: 0.0064424002 Absolute Difference: 0.0000015998
+MC: 0.0024980000 Analitic: 0.0024903946 Absolute Difference: 0.0000076054
+
+Number of rolls: 10000000
+MC: 1.0000000000 Analitic: 1.0000000000 Absolute Difference: 0.0000000000
+MC: 0.7853517000 Analitic: 0.7853981634 Absolute Difference: 0.0000464634
+MC: 0.5236374000 Analitic: 0.5235987756 Absolute Difference: 0.0000386244
+MC: 0.3085996000 Analitic: 0.3084251375 Absolute Difference: 0.0001744625
+MC: 0.1645458000 Analitic: 0.1644934067 Absolute Difference: 0.0000523933
+MC: 0.0808565000 Analitic: 0.0807455122 Absolute Difference: 0.0001109878
+MC: 0.0368597000 Analitic: 0.0369122341 Absolute Difference: 0.0000525341
+MC: 0.0158640000 Analitic: 0.0158543442 Absolute Difference: 0.0000096558
+MC: 0.0064571000 Analitic: 0.0064424002 Absolute Difference: 0.0000146998
+MC: 0.0025103000 Analitic: 0.0024903946 Absolute Difference: 0.0000199054
+
+Number of rolls: 100000000
+MC: 1.0000000000 Analitic: 1.0000000000 Absolute Difference: 0.0000000000
+MC: 0.7854211400 Analitic: 0.7853981634 Absolute Difference: 0.0000229766
+MC: 0.5236166800 Analitic: 0.5235987756 Absolute Difference: 0.0000179044
+MC: 0.3084793700 Analitic: 0.3084251375 Absolute Difference: 0.0000542325
+MC: 0.1645574700 Analitic: 0.1644934067 Absolute Difference: 0.0000640633
+MC: 0.0807618700 Analitic: 0.0807455122 Absolute Difference: 0.0000163578
+MC: 0.0368946400 Analitic: 0.0369122341 Absolute Difference: 0.0000175941
+MC: 0.0158512900 Analitic: 0.0158543442 Absolute Difference: 0.0000030542
+MC: 0.0064431000 Analitic: 0.0064424002 Absolute Difference: 0.0000006998
+MC: 0.0024855500 Analitic: 0.0024903946 Absolute Difference: 0.0000048446
+
