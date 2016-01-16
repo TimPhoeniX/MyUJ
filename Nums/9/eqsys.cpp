@@ -1,5 +1,6 @@
 #include <cmath>
 #include <iostream>
+#include <vector>
 #include "ctl_matrix.hpp"
 
 CTL::Matrix<double> G(const CTL::Matrix<double>& vec)
@@ -23,26 +24,39 @@ CTL::Matrix<double>& J(CTL::Matrix<double>& j, const CTL::Matrix<double>& vec)
 
 int main()
 {
-	CTL::Matrix<double> vec(2,1,new double[2]{1,11});
-	CTL::Matrix<double> j(2,2);
-	CTL::Matrix<double> next(2,1);
+	std::vector<CTL::Matrix<double>> results;
 	unsigned int* p = new unsigned int[2];
-	for(int i = 0; i < 100; ++i)
+	for(double a = -250.; a < 250.1; a+=0.25)
 	{
-		std::cout << i << '\n';
-		next=G(vec);
-		J(j,vec);
-		std::cout << j;
-		std::cout << next;
-		j.InplaceLU(p);
-		next.InplacePermutateRows(p);
-		std::cout << j;
-		std::cout << next;
-		next=j.SolveWithLU(next);
-		std::cout << next;
-//		next.InplaceReversePermutateRows(p);
-		vec=vec-next;
+		for(double b = -250.; b < 250.1; b+=0.25)
+		{
+			unsigned int limit = 1000000;
+			CTL::Matrix<double> vec(2,1,new double[2]{a,b});
+			CTL::Matrix<double> j(2,2);
+			CTL::Matrix<double> next = G(vec);
+			while(!next.ConvergenceToZero() && --limit)
+			{
+				next=G(vec);
+				J(j,vec);
+				j.InplaceLU(p);
+				next.InplacePermutateRows(p);
+				next=j.SolveWithLU(next);
+				vec=vec-next;
+			}
+			if([&]()->bool
+				{
+					for(auto& i : results)
+					{
+						if( (i-vec).ConvergenceToZero(8) ) return false;
+					}
+					return true; 
+				}()) results.push_back(vec);
+		}
 	}
-	std::cout << vec << std::endl;
+	delete[] p;
+	for(auto& i : results)
+	{
+		std::cout << "Solution:\n" << i << std::endl;
+	}
 	return 0;
 }

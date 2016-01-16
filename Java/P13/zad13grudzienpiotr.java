@@ -35,7 +35,7 @@ class ImagesWebFinder implements ImagesWebFinderInterface
 			String imgsrc = (String)attr.getAttribute(HTML.Attribute.SRC);
 			if(imgsrc!=null)
 			{
-				String[] arr = imgsrc.split("[=.]+");
+				String[] arr = imgsrc.split("[.]+");
 				String key = arr[arr.length-1];
 				Set<String> set = map.get(key);
 				if(set==null)

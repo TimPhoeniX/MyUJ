@@ -233,6 +233,15 @@ namespace CTL
 			return *this;
 		}
 		
+		bool operator<(T val)
+		{
+			for(unsigned int i = 0; i < this->Total; ++i)
+			{
+				if(!this->Val[i]<val) return false;
+			}
+			return true;
+		}
+		
 		Matrix<T> Transpose() const
 		{
 			Matrix<T> tmp(this->Col,this->Row);
@@ -582,6 +591,24 @@ namespace CTL
 			for(unsigned int i = 0; i < this->Row; ++i)
 			{
 				if(std::abs(std::abs(this->Val[i])-std::abs(v.Val[i])) > this->Epsilon(16)) return false;
+			}
+			return true;
+		}
+		
+		bool ConvergenceToZero()
+		{
+			for(unsigned int i = 0; i < this->Total ; ++i)
+			{
+				if(std::abs(this->Val[i]) > this->Epsilon(10)) return false;
+			}
+			return true;
+		}
+		
+		bool ConvergenceToZero(unsigned int n)
+		{
+			for(unsigned int i = 0; i < this->Total ; ++i)
+			{
+				if(std::abs(this->Val[i]) > this->Epsilon(n)) return false;
 			}
 			return true;
 		}
