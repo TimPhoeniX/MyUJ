@@ -13,6 +13,8 @@ class ImagesWebFinder implements ImagesWebFinderInterface
 		URL url = null;
 		URLConnection con = null;
 		BufferedReader read = null;
+		HTMLEditorKit kit = new HTMLEditorKit();
+		HTMLDocument doc = (HTMLDocument)kit.createDefaultDocument();
 		try
 		{ 
 			url = new URL(URL);
@@ -21,13 +23,11 @@ class ImagesWebFinder implements ImagesWebFinderInterface
 		}
 		catch(Exception e) { System.err.println("err"); }
 		
-		HTMLEditorKit kit = new HTMLEditorKit();
-		HTMLDocument doc = (HTMLDocument)kit.createDefaultDocument();
-		HTMLEditorKit.Parser pars = new ParserDelegator();
-		HTMLEditorKit.ParserCallback callb = doc.getReader(0);
 		
-		try{ pars.parse(read, callb, true); }
-		catch(Exception e) { System.err.println("err"); }
+// 		HTMLEditorKit.Parser pars = new ParserDelegator();
+// 		HTMLEditorKit.ParserCallback callb = doc.getReader(0);		
+// 		try{ pars.parse(read, callb, true); }
+// 		catch(Exception e) { System.err.println("err"); }
 		
 		for(HTMLDocument.Iterator it = doc.getIterator(HTML.Tag.IMG); it.isValid(); it.next())
 		{
