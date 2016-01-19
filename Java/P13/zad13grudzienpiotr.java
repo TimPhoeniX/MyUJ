@@ -17,9 +17,10 @@ class ImagesWebFinder implements ImagesWebFinderInterface
 		HTMLDocument doc = (HTMLDocument)kit.createDefaultDocument();
 		try
 		{ 
-			url = new URL(URL);
-			con = url.openConnection();
-			read = new BufferedReader(new InputStreamReader(con.getInputStream()));
+//			url = new URL(URL);
+//			con = url.openConnection();
+//			read = new BufferedReader(new InputStreamReader(con.getInputStream()));
+			read = new BufferedReader(new FileReader(URL));
 		}
 		catch(Exception e) { System.err.println("err"); }
 		
@@ -48,5 +49,11 @@ class ImagesWebFinder implements ImagesWebFinderInterface
 		}
 		
 		return map;
+	}
+	
+	public static void main(String[] args)
+	{
+		ImagesWebFinderInterface i = new ImagesWebFinder();
+		System.err.println(i.getImages("h1.html"));
 	}
 }
