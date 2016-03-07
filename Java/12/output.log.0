@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2016-01-20T10:28:59</date>
+  <millis>1453282139410</millis>
+  <sequence>884</sequence>
+  <logger>LoggerAndFiles</logger>
+  <level>WARNING</level>
+  <class>LoggerShow</class>
+  <method>logSth</method>
+  <thread>1</thread>
+  <message>6. Komunikat poziomu WARNING</message>
+</record>
+<record>
+  <date>2016-01-20T10:28:59</date>
+  <millis>1453282139411</millis>
+  <sequence>885</sequence>
+  <logger>LoggerAndFiles</logger>
+  <level>INFO</level>
+  <class>LoggerShow</class>
+  <method>logSth</method>
+  <thread>1</thread>
+  <message>5. Komunikat poziomu INFO</message>
+</record>
+<record>
+  <date>2016-01-20T10:28:59</date>
+  <millis>1453282139411</millis>
+  <sequence>886</sequence>
+  <logger>LoggerAndFiles</logger>
+  <level>CONFIG</level>
+  <class>LoggerShow</class>
+  <method>logSth</method>
+  <thread>1</thread>
+  <message>4. Komunikat poziomu CONFIG</message>
+</record>
+<record>
+  <date>2016-01-20T10:28:59</date>
+  <millis>1453282139411</millis>
+  <sequence>887</sequence>
+  <logger>LoggerAndFiles</logger>
+  <level>FINE</level>
+  <class>LoggerShow</class>
+  <method>logSth</method>
+  <thread>1</thread>
+  <message>3. Komunikat poziomu FINE</message>
+</record>
+<record>
+  <date>2016-01-20T10:28:59</date>
+  <millis>1453282139411</millis>
+  <sequence>888</sequence>
+  <logger>LoggerAndFiles</logger>
+  <level>FINER</level>
+  <class>LoggerShow</class>
+  <method>logSth</method>
+  <thread>1</thread>
+  <message>2. Komunikat poziomu FINER</message>
+</record>
+<record>
+  <date>2016-01-20T10:28:59</date>
+  <millis>1453282139411</millis>
+  <sequence>889</sequence>
+  <logger>LoggerAndFiles</logger>
+  <level>FINEST</level>
+  <class>LoggerShow</class>
+  <method>logSth</method>
+  <thread>1</thread>
+  <message>1. Komunikat poziomu FINEST</message>
+</record>
+<record>
+  <date>2016-01-20T10:28:59</date>
+  <millis>1453282139411</millis>
+  <sequence>890</sequence>
+  <logger>LoggerAndFiles</logger>
+  <level>FINER</level>
+  <class>LoggerShow</class>
+  <method>logSth</method>
+  <thread>1</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2016-01-20T10:28:59</date>
+  <millis>1453282139411</millis>
+  <sequence>891</sequence>
+  <logger>LoggerAndFiles</logger>
+  <level>FINER</level>
+  <class>LoggerShow</class>
+  <method>logSth</method>
+  <thread>1</thread>
+  <message>ENTRY java.util.logging.Logger@14ae5a5</message>
+</record>
+<record>
+  <date>2016-01-20T10:28:59</date>
+  <millis>1453282139412</millis>
+  <sequence>892</sequence>
+  <logger>LoggerAndFiles</logger>
+  <level>SEVERE</level>
+  <class>LoggerShow</class>
+  <method>logSth</method>
+  <thread>1</thread>
+  <message>7. Komunikat poziomu SEVERE</message>
+</record>
+<record>
+  <date>2016-01-20T10:28:59</date>
+  <millis>1453282139412</millis>
+  <sequence>893</sequence>
+  <logger>LoggerAndFiles</logger>
+  <level>WARNING</level>
+  <class>LoggerShow</class>
+  <method>logSth</method>
+  <thread>1</thread>
+  <message>6. Komunikat poziomu WARNING</message>
+</record>
+<record>
+  <date>2016-01-20T10:28:59</date>
+  <millis>1453282139412</millis>
+  <sequence>894</sequence>
+  <logger>LoggerAndFiles</logger>
+  <level>INFO</level>
+  <class>LoggerShow</class>
+  <method>logSth</method>
+  <thread>1</thread>
+  <message>5. Komunikat poziomu INFO</message>
+</record>
+<record>
+  <date>2016-01-20T10:28:59</date>
+  <millis>1453282139413</millis>
+  <sequence>895</sequence>
+  <logger>LoggerAndFiles</logger>
+  <level>CONFIG</level>
+  <class>LoggerShow</class>
+  <method>logSth</method>
+  <thread>1</thread>
+  <message>4. Komunikat poziomu CONFIG</message>
+</record>
+<record>
+  <date>2016-01-20T10:28:59</date>
+  <millis>1453282139413</millis>
+  <sequence>896</sequence>
+  <logger>LoggerAndFiles</logger>
+  <level>FINE</level>
+  <class>LoggerShow</class>
+  <method>logSth</method>
+  <thread>1</thread>
+  <message>3. Komunikat poziomu FINE</message>
+</record>
+<record>
+  <date>2016-01-20T10:28:59</date>
+  <millis>1453282139413</millis>
+  <sequence>897</sequence>
+  <logger>LoggerAndFiles</logger>
+  <level>FINER</level>
+  <class>LoggerShow</class>
+  <method>logSth</method>
+  <thread>1</thread>
+  <message>2. Komunikat poziomu FINER</message>
+</record>
+<record>
+  <date>2016-01-20T10:28:59</date>
+  <millis>1453282139413</millis>
+  <sequence>898</sequence>
+  <logger>LoggerAndFiles</logger>
+  <level>FINEST</level>
+  <class>LoggerShow</class>
+  <method>logSth</method>
+  <thread>1</thread>
+  <message>1. Komunikat poziomu FINEST</message>
+</record>
+<record>
+  <date>2016-01-20T10:28:59</date>
+  <millis>1453282139413</millis>
+  <sequence>899</sequence>
+  <logger>LoggerAndFiles</logger>
+  <level>FINER</level>
+  <class>LoggerShow</class>
+  <method>logSth</method>
+  <thread>1</thread>
+  <message>RETURN</message>
+</record>
+</log>
