@@ -1,9 +1,9 @@
 CPPFLAGS=-std=c++11 -Wall -Wextra
 CC=g++
-Name=
+Name=set
 Sources=main.cpp
 Exe=$(Name).exe
-Headers=
+Headers=ctl_set.hpp
 Files= $(Sources) $(Headers) Makefile
 .PHONY: default run clean tar
 
