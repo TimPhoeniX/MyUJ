@@ -37,14 +37,15 @@
 		{
 		}
 		
-		Set(const Set<T>& other): Impl(Set<T>(other).Impl)
+
+		Set(const Set<T>& other): Impl(other.Impl)
 		{
 		}
 		
 		virtual AbstractSet<T>* Sum(AbstractSet<T>* other) override
 		{
 			AbstractSet<T>* ret = new Set(*this);
-			for(auto& it: ((Set<T>*)other)->Impl)
+			for(auto& it: reinterpret_cast<Set<T>*>(other)->Impl)
 			{
 				ret->Insert(it);
 			}
@@ -54,7 +55,8 @@
 		virtual AbstractSet<T>* Difference(AbstractSet<T>* other) override
 		{
 			AbstractSet<T>* ret = new Set(*this);
-			for(auto& it: ((Set<T>*)other)->Impl)
+//			for(auto& it: ((Set<T>*)other)->Impl)
+			for (auto& it : reinterpret_cast<Set<T>*>(other)->Impl)
 			{
 				ret->Delete(it);
 			}
@@ -63,7 +65,7 @@
 		virtual AbstractSet<T>* Intersection(AbstractSet<T>* other) override
 		{
 			AbstractSet<T>* ret = new Set(*this);
-			for(auto& it: ((Set<T>*)other)->Impl)
+			for(auto& it: this->Impl)
 			{
 				if(!other->IsMember(it))
 				{

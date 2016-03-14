@@ -94,3 +94,5 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 *.goutputstream*
+*.tlog
+AiSD2/1/Debug/vc140.idb
