@@ -22,5 +22,5 @@ int main()
 	E->Print();
 	A->Delete(1);
 	A->Print();
-	std::cout << B->IsMember(1) << ' ' << B->IsMember(5);
+	std::cout << B->IsMember(1) << ' ' << B->IsMember(5) << std::endl;
 }

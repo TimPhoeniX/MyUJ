@@ -1,0 +1,15 @@
+Set<Set<Vertex>> ConnectedComponent(V,E)
+{
+	Set<Set<Vertex> Pi;
+	for(v :V)
+		 Pi.Add(Set(v))
+	for( e : E)
+	{
+		if(FindSet(e.u)!=FindSet(e.v))
+		{
+			Pi.Remove(vSet)
+			uSet.Union(vSet)
+		}
+	}
+	return Pi;
+}
