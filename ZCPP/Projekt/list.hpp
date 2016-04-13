@@ -2,12 +2,11 @@
  * 
  */
 
-#ifndef CTL_FORWARDLIST_HPP
-#define CTL_FORWARDLIST_HPP
+#ifndef UJ_LIST_HPP
+#define UJ_LIST_HPP
 
 #include<memory>
 #include<iterator>
-#include<iostream>
 #include<stdexcept>
 
 namespace uj
@@ -19,9 +18,9 @@ namespace uj
 	class lnode
 	{
 		lnode() = default;
-		lnode(lnode* n): next(n){};
 		lnode next* = nullptr;
-		void null()
+
+		void null() noexcept
 		{
 			this->next=null;
 		}
@@ -37,9 +36,12 @@ namespace uj
 		friend class list;
 		friend class citer;
 		friend class iter;
-		
 		T value;
-	}
+
+		template<typename... Args>
+		typenode(Args&&... args): value(std::forward<Args>(args)..)
+		{}
+	};
 	
 	template<typename T>
 	class citer
@@ -48,7 +50,7 @@ namespace uj
 		using value_type = T;
 		using pointer = const value_type*;
 		using reference = const value_type&;
-		using difference_type = long;
+		using difference_type = std::ptrdiff_t;
 		using iterator_category = std::forward_iterator_tag;
 		
 	protected:
@@ -56,433 +58,278 @@ namespace uj
 		
 	public:
 		citer() = default;
+		~citer() = default;
 		citer(lnode* p): pnode(p){}
-		citer(const citer<T>& i) = default;
-		citer(citer<T>&& i) = default;
+		citer(const citer&) = default;
+		citer(citer&&) = default;
+		citer& operator=(const citer&) = default;
+		citer& operator=(citer&&) = default;
 		
-		citer<T>& operator=(const citer<T>& x)
-		{
-			if(this == &x) return;
-			this->pnode=x.pnode;
-			return *this;
-		}
-		
-		citer<T>& operator=(citer<T>&& x)
-		{
-			if(this == &x) return;
-			this->pnode=x.pnode;
-			return *this;
-		}
-
 		reference operator*() const noexcept
 		{
-			return reinterpret_cast<typenode<T>*>(lnode)->value;
+			return reinterpret_cast<typenode<T>*>(this->pnode)->value;
 		}
 		
 		pointer operator->() const noexcept
 		{
-			return &reinterpret_cast<typenode<T>*>(lnode)->value;
+			return &reinterpret_cast<typenode<T>*>(this->pnode)->value;
 		}
 		
-		citer<T>& operator++() noexcept
+		citer& operator++() noexcept
 		{
 			this->pnode=this->pnode->next;
 			return *this;
 		}
 		
-		citer<T> operator++(int) noexcept
+		citer operator++(int) noexcept
 		{
-			citer<T> tmp(*this);
+			citer tmp(*this);
 			this->pnode=this->pnode->next;
 			return tmp;
 		}
 		
-		bool operator==(const citer<T>& x) const noexcept
+		lnode* node() const noexcept
+		{
+			return this->pnode;
+		}
+
+		bool operator==(const citer& x) const noexcept
 		{
 			return this->pnode == x.pnode;
 		}
 		
-		bool operator!=(const citer<T>& x) const noexcept
+		bool operator!=(const citer& x) const noexcept
 		{
 			return this->pnode != x.pnode;
 		}
 		
-		citer<T> next()
+		citer next() const noexcept
 		{
-			if(this->pnode)
-				return citer<T>(this->pnode->next);
+			if(this->pnode->next)
+				return citer(this->pnode->next->next);
 			else
-				return citer<T>(nullptr);
+				return citer(this->pnode->next);
 		}
+
+
 	};
 	
 	template<typename T>
-	inline bool operator==(const ForwardListIterator<T>& a, const ForwardListIterator<T>& b) noexcept
+	class iter : public citer<T>
+	{
+	public:
+		using value_type = T;
+		using pointer = value_type*;
+		using reference = value_type&;
+		using difference_type = std::ptrdiff_t;
+		using iterator_category = std::forward_iterator_tag;
+
+	public:
+		iter() = default;
+		~iter() = default;
+		iter(lnode* p) : pnode(p) {}
+		iter(const iter&) = default;
+		iter(iter&&) = default;
+		iter& operator=(const iter&) = default;
+		iter& operator=(iter&&) = default;
+
+		reference operator*() const noexcept
+		{
+			return reinterpret_cast<typenode<T>*>(this->pnode)->value;
+		}
+
+		pointer operator->() const noexcept
+		{
+			return &reinterpret_cast<typenode<T>*>(this->pnode)->value;
+		}
+
+		iter& operator++() noexcept
+		{
+			this->pnode = this->pnode->next;
+			return *this;
+		}
+
+		iter operator++(int) noexcept
+		{
+			iter tmp(*this);
+			this->pnode = this->pnode->next;
+			return tmp;
+		}
+	};
+
+	template<typename T>
+	inline bool operator==(const citer<T>& a, const citer<T>& b) noexcept
 	{
 		return a.pnode==b.pnode;
 	}
 	
 	template<typename T>
-	inline bool operator!=(const ForwardListIterator<T>& a, const ForwardListIterator<T>& b) noexcept
+	inline bool operator!=(const citer<T>& a, const citer<T>& b) noexcept
 	{
 		return a.pnode!=b.pnode;
 	}
-	
-	
-	
-	template<typename T>
-	class ForwardListIterator
+
+	template<typename T, typename Allocator = std::allocator<T>>
+	class list
 	{
-	public:
-		typedef T value_type;
-		typedef value_type* pointer;
-		typedef value_type& reference;
-		typedef std::ptrdiff_t difference_type;
-		typedef std::forward_iterator_tag iteratorCategory;
-		typedef ForwardListIterator<T> Self;
-		typedef ForwardListNode<T> TypeNode;
-		
-		TypeNode* Node = nullptr;
-		
-		ForwardListIterator()
-		{
-		}
-		
-		ForwardListIterator(TypeNode* p)
-		: Node(p)
-		{
-		}
-		
-		ForwardListIterator(const Self& x)
-		: Node(x.pnode)
-		{
-		}
-		
-		Self& operator=(const Self& x) 
-		{
-			this->pnode=x.pnode;
-			return *this;
-		}
-		
-		reference operator*() const noexcept
-		{
-			return *reinterpret_cast<value_type*>(&(this->pnode->data));
-		}
-		
-		pointer operator->() const noexcept
-		{
-			return reinterpret_cast<value_type*>(&(this->pnode->data));
-		}
-		
-		Self& operator++() noexcept
-		{
-			this->pnode=this->pnode->next;
-			return *this;
-		}
-		
-		Self operator++(int) noexcept
-		{
-			Self tmp(*this);
-			this->pnode=this->pnode->next;
-			return tmp;
-		}
-		
-		bool operator==(const Self& x) const noexcept
-		{
-			return this->pnode == x.pnode;
-		}
-		
-		bool operator!=(const Self& x) const noexcept
-		{
-			return this->pnode != x.pnode;
-		}
-		
-		Self next()
-		{
-			if(this->pnode)
-				return Self(this->pnode->next);
-			else
-				return Self(nullptr);
-		}
-	};
-	
-	
-	template<typename T>
-	class ForwardList
-	{
-	public:
-		typedef T value_type;
-		typedef value_type& reference;
-		typedef const value_type& const_reference;
-		typedef std::size_t SizeType;
-		typedef ForwardListIterator<value_type> iterator;
-		typedef ForwardListIterator<value_type> const_iterator;
-		
 	private:
-		typedef ForwardListNode<value_type> Node;
-		typedef typename std::allocator<value_type>::template rebind<value_type>::other TypeAllocator;
-		typedef typename std::allocator<value_type>::template rebind<Node>::other NodeAllocator;
-		
-		Node* Head = nullptr;
-		Node* Tail = nullptr;
-		SizeType Size = 0;
-		TypeAllocator TAlloc = TypeAllocator();
-		NodeAllocator NAlloc = NodeAllocator();
-		
-		Node* GetNode()
-		{
-			auto tmp = this->NAlloc.allocate(1);
-			return std::addressof(*tmp);
-		}
-		
-		template<typename... Args>
-		Node* MakeNode(Args&&... args)
-		{
-			Node* tmp = this->GetNode();
-			::new (reinterpret_cast<void*>(tmp)) Node;
-			this->TAlloc.construct(reinterpret_cast<value_type*>(&(tmp->data)),std::forward<Args>(args)...);
-			return tmp;
-		}
-		
-		void FreeNode(Node* n)
-		{
-			this->NAlloc.deallocate(n,1);
-		}
-		
-		Node* EraseAfter(Node* pos)
-		{
-			auto tmp = pos->next;
-			if(tmp==this->Tail) this->Tail=pos;
-			pos->next=tmp->next;
-			this->TAlloc.destroy(reinterpret_cast<value_type*>(&tmp->data));
-			tmp->~Node();
-			this->FreeNode(tmp);
-			--this->Size;
-			return pos->next;
-		}
-		
+		using Alloc = std::allocator_traits<Allocator>;
+		using node_allocator_type = typename Alloc::rebind_alloc<typenode<T>>;
+		using NodeAlloc = typename Alloc::rebind_traits<node_allocator_type>;
+
 	public:
-		ForwardList()
+		using value_type = T;
+		using allocator_type = Allocator;
+		using size_type = std::size_t;
+		using difference_type = std::ptrdiff_t;
+		using reference = value_type&;
+		using const_reference = const value_type&;
+		using pointer = Alloc::pointer;
+		using const_pointer = Alloc::const_pointer;
+		using iterator = iter<T>;
+		using const_iterator = citer<T>;
+
+	private:
+		lnode head;
+		size_t lSize = 0;
+		node_allocator_type alloc;
+
+	public:
+		list() : list(Allocator());
+		explicit list(const Allocator& alloc);
+		list(size_type count, const T& value, const Allocator& alloc = Allocator);
+		list(size_type count, const Allocator& alloc = Allocator());
+		template<typename InIterator>
+		list(InIterator first, InIterator last, const Allocator& alloc);
+		list(const list& other);
+		list(const list& other, const Allocator& other);
+		list(list&& other);
+		list(list&& other, const Allocator& other);
+		list(std::initializer_list<T> init, const Allocator& alloc = Allocator());
+		~list();
+
+		list& operator=(const list& other);
+		list& operator=(list&& other);
+		list& operator=(std::initializer_list<T> ilist);
+
+		void assing(size_type count, const T& value);
+		template<typename InIterator>
+		void assing(InIterator first, InIterator last);
+		void assing(std::initializer_list<T> ilist);
+
+		allocator_type get_allocator() const
 		{
-		}
-		
-		ForwardList(ForwardList<value_type>&& f)
-		: Head(f.Head), Tail(f.Tail), Size(f.Size)
-		{
-			f.Head = nullptr;
-			f.Tail = nullptr;
-			f.Size = 0;
-		}
-		
-		~ForwardList()
-		{
-			this->Clear();
-		}
-		
-		SizeType GetSize() const
-		{
-			return this->Size;
-		}
-		
-		bool Empty() const
-		{
-			return this->Size == 0;
-		}
-		
-		reference Front()
-		{
-			if(this->Size == 0) throw std::out_of_range("Front called on empty list");
-			return *reinterpret_cast<value_type*>(&this->Head->data);
-		}
-		
-		iterator begin()
-		{
-			return iterator(Head);
-		}
-		
-		iterator end()
-		{
-			return iterator(nullptr);
-		}
-		
-		const_iterator begin() const
-		{
-			return const_iterator(Head);
-		}
-		
-		const_iterator end() const
-		{
-			return const_iterator(nullptr);
-		}
-		
-		const_iterator cbegin()
-		{
-			return const_iterator(Head);
-		}
-		
-		const_iterator cend()
-		{
-			return const_iterator(nullptr);
-		}
-		
-		value_type PopFront()
-		{
-			if(this->Size == 0) throw std::out_of_range("PopFront called on empty list");
-			auto tmp = this->Head;
-			if(tmp==this->Tail) this->Tail=nullptr;
-			auto val = reinterpret_cast<value_type&&>(tmp->data);
-			this->Head=tmp->next;
-			--this->Size;
-			this->TAlloc.destroy(&tmp->data);
-			tmp->~Node();
-			this->FreeNode(tmp);
-			return val;
-		}
-		
-		value_type PopBack()
-		{
-			if(this->Size == 0) throw std::out_of_range("PopBack called on empty list");
-			if(Head!=Tail)
-			{
-				auto val = reinterpret_cast<value_type&&>(this->Tail->data);
-				auto i = this->begin();
-				while(i.next() != Tail) ++i;
-				this->EraseAfter(i.pnode);
-				return val;
-			}
-			else
-			{
-				return this->PopFront();
-			}
-		}
-		
-		void PushFront(const value_type& e)
-		{
-			auto tmp = this->MakeNode(e);
-			tmp->next = this->Head;
-			this->Head=tmp;
-			++this->Size;
-			if(this->Tail == nullptr) this->Tail = this->Head;
-		}
-		
-		void PushBack(const value_type& e)
-		{
-			if(this->Tail==nullptr) return this->PushFront(e);
-			auto tmp = this->MakeNode(e);
-			this->Tail->next=tmp;
-			this->Tail=tmp;
-			++this->Size;
-		}
-		
-		//Ugly, but will do for now.
-		void Clear()
-		{
-			if(this->Size == 0) return;
-			while(this->Head != this->Tail)
-			{
-				this->EraseAfter(this->Head);
-			}
-			this->PopFront();
-		}
-		
-		void Insert(SizeType i, const value_type& e)
-		{
-			if(i==0) return this->PushFront(e);
-			else if(i==this->Size) return this->PushBack(e);
-			else if(i > this->Size) return;
-			else
-			{
-				auto it = this->begin();
-				while(--i) ++it;
-				auto tmp = this->MakeNode(e);
-				tmp->next = it.pnode->next;
-				it.pnode->next = tmp;
-				++this->Size;
-			}
-		}
-		
-		reference Get(SizeType i)
-		{
-			if(i >= this->Size) throw std::out_of_range("Get called with i >= Size");
-			auto tmp = this->begin();
-			while(i--) ++tmp;
-			return *tmp;
-		}
-		
-		const_reference Get(SizeType i) const 
-		{
-			if(i >= this->Size) throw std::out_of_range("Get called with i >= Size");
-			auto tmp = this->begin();
-			while(i--) ++tmp;
-			return *tmp;
-		}
-		
-		iterator Find(const value_type& e)
-		{
-			for(auto tmp = this->begin(); tmp != this->end(); ++tmp)
-			{
-				if(*tmp == e) return tmp;
-			}
-			return iterator(nullptr);
-		}
-		
-		const_iterator Find(const value_type& e) const
-		{
-			for(auto tmp = this->begin(); tmp != this->end(); ++tmp)
-			{
-				if(*tmp == e) return tmp;
-			}
-			return const_iterator(nullptr);
-		}
-		
-		void Erase(SizeType i)
-		{
-			if(i == 0)
-			{
-				this->PopFront();
-			}
-			else if(i == this->Size-1)
-			{
-				this->PopBack();
-			}
-			else if(i >= this->Size)
-			{
-			}
-			else 
-			{
-				auto it = this->begin();
-				while(--i) ++it;
-				this->EraseAfter(it.pnode);
-			}
+			return Allocator();
 		}
 
-		void Erase(const value_type& e)
-		{
-			auto it = this->Head;
-			int i = 0;
-			while(this->Head != nullptr && it->getData() != e)
-			{
-				it = it->next;
-				++i;
-			}
-			this->Erase(i);
-		}
-		
-		void Print(std::ostream& out = std::cout) const
-		{
-			auto i = this->begin();
-			while(i!=this->end())
-			{
-				out << *(i++) << ' ';
-			}
-		}
-		
-		friend std::ostream& operator<<(std::ostream& out, const CTL::ForwardList<value_type>& L)
-		{
-			L.Print(out);
-			return out;
-		}
+		reference front();
+		const_reference front() const;
+
+		reference back();
+		const_reference back() const;
+
+		iterator begin() noexcept;
+		const_iterator begin() const noexcept;
+		const_iterator cbegin() const noexcept;
+
+		iterator end() noexcept;
+		const_iterator end() const noexcept;
+		const_iterator cend() const noexcept;
+
+		//Err? What? How to do that?
+		//reverse_iterator rbegin() noexcept;
+		//const_reverse_iterator rbegin() const noexcept;
+		//const_reverse_iterator crbegin() const noexcept;
+
+		//reverse_iterator rend() noexcept;
+		//const_reverse_iterator rend() const noexcept;
+		//const_reverse_iterator crend() const noexcept;
+
+		bool empty() const noexcept;
+		size_type size() const noexcept;
+		size_type size() const noexcept;
+
+		void clear() noexcept;
+
+		iterator insert(const_iterator pos, const T& value);
+		iterator insert(const_iterator pos, T&& value);
+		iterator insert(const_iterator pos, size_type count, const T& value);
+		template< class InputIt >
+		iterator insert(const_iterator pos, InputIt first, InputIt last);
+		iterator insert(const_iterator pos, std::initializer_list<T> ilist);
+
+		template< class... Args >
+		iterator emplace(const_iterator pos, Args&&... args);
+
+		iterator erase(iterator pos);
+		iterator erase(iterator first, iterator last);
+
+		void push_back(const T& value);
+		void push_back(T&& value);
+
+		template< class... Args >
+		void emplace_back(Args&&... args);
+
+		void pop_back();
+
+		void push_front(const T& value);
+		void push_front(T&& value);
+
+		template< class... Args >
+		void emplace_front(Args&&... args);
+
+		void pop_front();
+
+		void resize(size_type count);
+		void resize(size_type count, const value_type& value);
+
+		void swap(list& other);
+
+		void merge(list& other);
+		void merge(list&& other);
+		template <class Compare>
+		void merge(list& other, Compare comp);
+		template <class Compare>
+		void merge(list&& other, Compare comp);
+
+		void splice(const_iterator pos, list& other);
+		void splice(const_iterator pos, list&& other);
+		void splice(const_iterator pos, list& other, const_iterator it);
+		void splice(const_iterator pos, list&& other, const_iterator it);
+		void splice(const_iterator pos, list& other, const_iterator first, const_iterator last);
+		void splice(const_iterator pos, list&& other, const_iterator first, const_iterator last);
+
+		void remove(const T& value);
+		template< class UnaryPredicate >
+		void remove_if(UnaryPredicate p);
+
+		void reverse();
+
+		void unique();
+		template< class BinaryPredicate >
+		void unique(BinaryPredicate p);
+
+		void sort();
+		template< class Compare >
+		void sort(Compare comp);
 	};
+
+	template< class T, class Alloc >
+	bool operator==(const list<T, Alloc>& lhs, const list<T, Alloc>& rhs);
+	template< class T, class Alloc >
+	bool operator!=(const list<T, Alloc>& lhs, const list<T, Alloc>& rhs);
+	template< class T, class Alloc >
+	bool operator<(const list<T, Alloc>& lhs, const list<T, Alloc>& rhs);
+	template< class T, class Alloc >
+	bool operator<=(const list<T, Alloc>& lhs, const list<T, Alloc>& rhs);
+	template< class T, class Alloc >
+	bool operator>(const list<T, Alloc>& lhs, const list<T, Alloc>& rhs);
+	template< class T, class Alloc >
+	bool operator>=(const list<T, Alloc>& lhs, const list<T, Alloc>& rhs);
+
+	template< class T, class Alloc >
+	void swap(list<T, Alloc>& lhs, list<T, Alloc>& rhs);
+
 }
 
-#endif
+#endif // !UJ_LIST_HPP
