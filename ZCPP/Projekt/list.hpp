@@ -8,6 +8,7 @@
 #include<memory>
 #include<iterator>
 #include<stdexcept>
+#include<limits>
 
 namespace uj
 {
@@ -67,12 +68,12 @@ namespace uj
 		
 		reference operator*() const noexcept
 		{
-			return reinterpret_cast<typenode<T>*>(this->pnode)->value;
+			return reinterpret_cast<typenode<T>*>(this->pnode->next)->value;
 		}
 		
 		pointer operator->() const noexcept
 		{
-			return &reinterpret_cast<typenode<T>*>(this->pnode)->value;
+			return &reinterpret_cast<typenode<T>*>(this->pnode->next)->value;
 		}
 		
 		citer& operator++() noexcept
@@ -105,10 +106,7 @@ namespace uj
 		
 		citer next() const noexcept
 		{
-			if(this->pnode->next)
-				return citer(this->pnode->next->next);
-			else
-				return citer(this->pnode->next);
+			return citer(this->pnode->next);
 		}
 
 
@@ -135,12 +133,12 @@ namespace uj
 
 		reference operator*() const noexcept
 		{
-			return reinterpret_cast<typenode<T>*>(this->pnode)->value;
+			return reinterpret_cast<typenode<T>*>(this->pnode->next)->value;
 		}
 
 		pointer operator->() const noexcept
 		{
-			return &reinterpret_cast<typenode<T>*>(this->pnode)->value;
+			return &reinterpret_cast<typenode<T>*>(this->pnode->next)->value;
 		}
 
 		iter& operator++() noexcept
@@ -193,10 +191,18 @@ namespace uj
 		lnode head;
 		size_t lSize = 0;
 		node_allocator_type alloc;
-
+		
+		void freeNode(typenode<T>* node) noexcept
+		{
+			NodeAlloc::destroy(this->alloc,node);
+			NodeAlloc::deallocate(this->alloc,node,1);
+		}
+		
 	public:
 		list() : list(Allocator());
-		explicit list(const Allocator& alloc);
+		explicit list(const Allocator& alloc):
+			alloc(alloc){}
+		
 		list(size_type count, const T& value, const Allocator& alloc = Allocator);
 		list(size_type count, const Allocator& alloc = Allocator());
 		template<typename InIterator>
@@ -223,15 +229,33 @@ namespace uj
 		}
 
 		reference front();
+		{
+			return *reinterpret_cast<typenode<T>(this->head->next)->value;
+		}
+		
 		const_reference front() const;
+		{
+			return *reinterpret_cast<typenode<T>(this->head->next)->value;
+		}
 
 		reference back();
 		const_reference back() const;
 
-		iterator begin() noexcept;
-		const_iterator begin() const noexcept;
+		iterator begin() noexcept
+		{
+			return iterator(&this->head);
+		}
+		
+		const_iterator begin() const noexcept
+		{
+			return const_iterator(&this->head);
+		}
+		
 		const_iterator cbegin() const noexcept;
-
+		{
+			return const_iterator(&this->head);
+		}
+		
 		iterator end() noexcept;
 		const_iterator end() const noexcept;
 		const_iterator cend() const noexcept;
@@ -245,11 +269,28 @@ namespace uj
 		//const_reverse_iterator rend() const noexcept;
 		//const_reverse_iterator crend() const noexcept;
 
-		bool empty() const noexcept;
-		size_type size() const noexcept;
-		size_type size() const noexcept;
+		bool empty() const noexcept
+		{
+			return this->size==0;
+		}
+		
+		size_type size() const noexcept
+		{
+			return this->size;
+		}
+		
+		size_type max_size() const noexcept
+		{
+			return std::numeric_limits<size_type>::max();
+		}
 
-		void clear() noexcept;
+		void clear() noexcept
+		{
+			while(this->next!=nullptr)
+			{
+				auto node = reinterpret_cast<typenode<T>*>
+			}
+		}
 
 		iterator insert(const_iterator pos, const T& value);
 		iterator insert(const_iterator pos, T&& value);
@@ -272,13 +313,38 @@ namespace uj
 
 		void pop_back();
 
-		void push_front(const T& value);
-		void push_front(T&& value);
+		void push_front(const T& value)
+		{
+			auto node = NodeAlloc::allocate(this->alloc,1);
+			NodeAlloc::construct(this->alloc,node,value);
+			node->next=this->head->next;
+			this->head->next=node;
+		}
+		
+		void push_front(T&& value)
+		{
+			auto node = NodeAlloc::allocate(this->alloc,1);
+			NodeAlloc::construct(this->alloc,node,value);
+			node->next=this->head->next;
+			this->head->next=node;
+		}
 
 		template< class... Args >
-		void emplace_front(Args&&... args);
+		void emplace_front(Args&&... args)
+		{
+			auto node = NodeAlloc::allocate(this->alloc,1);
+			NodeAlloc::construct(this->alloc,node,std::forward<Args>(args)...);
+			node->next=this->head->next;
+			this->head->next=node;
+		}
 
-		void pop_front();
+		void pop_front()
+		{
+			if(this->size==0) return;
+			auto node = reinterpret_cast<typenode<T>*>(this->head->next);
+			this->head->next=node->next;
+			this->freeNode(node);
+		}
 
 		void resize(size_type count);
 		void resize(size_type count, const value_type& value);

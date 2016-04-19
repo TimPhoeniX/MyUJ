@@ -1,0 +1,3 @@
+Wykonujemy operacje dekrementacji, inkrementacji, dereferencji, porównania !=.
+
+Wobec tego iterator musi być przynajmniej Bidirectional, może też być RandomAccess gdyż wspiera wszystkie operacje iteratora Bidirectional.
