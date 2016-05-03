@@ -70,7 +70,7 @@ public:
 	
 	void AddVertex(Vertex<T>* v)
 	{
-		this->graph.push_back(v);
+		this->graph.PushBack(v);
 	}
 	
 	Vertex<T>* find(const T& label)

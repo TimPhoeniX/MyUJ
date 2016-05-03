@@ -1,8 +1,7 @@
 CPPFLAGS= -std=c++11 -Wall -Wextra
 CC = g++
-Name = test.exe
-#Sources= aisd2-1.cpp
-Sources= StackTest.cpp
+Name = cc.exe
+Sources= aisd2-1.cpp
 Headers= ctl_virtual_disjointset.hpp
 
 .PHONY: default runt runl clean tar
