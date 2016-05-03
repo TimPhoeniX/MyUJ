@@ -663,30 +663,38 @@ namespace uj
 	bool operator<(const list<T, Alloc>& lhs, const list<T, Alloc>& rhs)
 	{
 		auto a = lhs.begin(), b = rhs.begin(), aend = lhs.end(), bend = rhs.end();
-		for(;a!=aend && b != bend; ++a, ++b)
+		for(;(a!=aend) && (b != bend); ++a, ++b)
 		{
 			if(*a < *b) return true;
 			if(*b < *a) return false;
 		}
-		return a==aend && b!=bend;
+		return (a==aend) && (b!=bend);
 	}
 	
 	template< class T, class Alloc >
 	bool operator<=(const list<T, Alloc>& lhs, const list<T, Alloc>& rhs)
 	{
-		return false;
+		return !(lhs>rhs);
 	}
 	
 	template< class T, class Alloc >
 	bool operator>(const list<T, Alloc>& lhs, const list<T, Alloc>& rhs)
 	{
-		return false;
+		auto a = lhs.begin(), b = rhs.begin(), aend = lhs.end(), bend = rhs.end();
+		for(;(a!=aend) && (b != bend); ++a, ++b)
+		{
+			std::cout << *a << ' ' << *b << std::endl;
+			if(*a > *b) return true;
+			if(*b > *a) return false;
+		}
+		std::cout << (a==aend) << ' ' << (b!=bend) << std::endl;
+		return (a!=aend) && (b==bend);
 	}
 	
 	template< class T, class Alloc >
 	bool operator>=(const list<T, Alloc>& lhs, const list<T, Alloc>& rhs)
 	{
-		return false;
+		return !(lhs<rhs);
 	}
 
 	template< class T, class Alloc >
