@@ -167,7 +167,7 @@ namespace uj
 		template<typename... Args>
 		typenode* getNode(Args&&... args)
 		{
-			typenode* node;
+			typenode* node = nullptr;
 			try
 			{
 				node = NodeAlloc::allocate(this->alloc,1);
@@ -216,18 +216,18 @@ namespace uj
 		{
 			this->insert(this->begin(),count,value);
 		}
+
+		list(const list& other) :
+			alloc(NodeAlloc::select_on_container_copy_construction(other.alloc))
+		{
+			this->insert(this->begin(), other.begin(), other.end());
+		}
 		
 		template<typename InIterator>
 		list(InIterator first, InIterator last, const Allocator& alloc = Allocator()):
 			alloc(alloc)
 		{
 			this->insert(this->begin(),first,last);
-		}
-			
-		list(const list& other):
-			alloc(NodeAlloc::select_on_container_copy_construction(other.alloc))
-		{
-			this->insert(this->begin(),other.begin(),other.end());
 		}
 
 		~list()
