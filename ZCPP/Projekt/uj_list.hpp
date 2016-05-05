@@ -339,6 +339,7 @@ namespace uj
 				this->head.next=node->next;
 				freeNode(node);
 			}
+			this->tail = &this->head;
 			this->lSize=0;
 		}
 
