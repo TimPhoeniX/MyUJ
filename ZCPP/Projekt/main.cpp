@@ -241,7 +241,8 @@ public:
 
 class Modifiers : public ListTest
 {
-	int array[]{ 0,1,2,3,4,5,6,7,8,9 };
+	int array[10]{ 0,1,2,3,4,5,6,7,8,9 };
+	int inserts[9]{ 5,7,7,5,7,7,7,7,5 };
 public:
 	void clear()
 	{
@@ -257,7 +258,58 @@ public:
 
 	void insert()
 	{
+		l->insert(l->begin(), 6u, 7);
+		CPPUNIT_ASSERT(!l->empty());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(6), l->size());
+		for(auto& it : *l)
+		{
+			CPPUNIT_ASSERT_EQUAL(7,it);
+		}
 
+		auto third = l->begin();
+		++++third;
+		auto inserted = l->insert(third,5);
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(7), l->size());
+		CPPUNIT_ASSERT_EQUAL(5, *inserted);
+
+		inserted = l->insert(l->begin(), 5);
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(8), l->size());
+		CPPUNIT_ASSERT_EQUAL(5, *inserted);
+		CPPUNIT_ASSERT_EQUAL(5, l->front());
+
+		inserted = l->insert(l->end(), 5);
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(9), l->size());
+		CPPUNIT_ASSERT_EQUAL(5, *inserted);
+		CPPUNIT_ASSERT_EQUAL(5, l->back());
+
+		int* t = inserts;
+		for(auto& it : *l)
+		{
+			CPPUNIT_ASSERT_EQUAL(*(t++), it);
+		}
+
+		l->clear();
+		l->insert(l->begin(), array, array+10);
+		CPPUNIT_ASSERT(!l->empty());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(10), l->size());
+		t = array;
+		for(auto& it : *l)
+		{
+			CPPUNIT_ASSERT_EQUAL(*(t++), it);
+		}
+	}
+
+	void erase()
+	{
+		l->assing(array, array + 10);
+		l->erase(l->begin());
+		CPPUNIT_ASSERT(!l->empty());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(9), l->size());
+		int* t = array+1;
+		for(auto& it : *l)
+		{
+			CPPUNIT_ASSERT_EQUAL(*(t++), it);
+		}
 	}
 };
 
@@ -295,6 +347,8 @@ int main()
 
 	CppUnit::TestSuite* modifiers = new CppUnit::TestSuite("Modifying tests");
 	assign->addTest(new CppUnit::TestCaller<Modifiers>("Clear", &Modifiers::clear));
+	assign->addTest(new CppUnit::TestCaller<Modifiers>("Insert", &Modifiers::insert));
+	assign->addTest(new CppUnit::TestCaller<Modifiers>("Erase", &Modifiers::erase));
 
 	runner.addTest(constructors);
 	runner.addTest(new Alloc());
