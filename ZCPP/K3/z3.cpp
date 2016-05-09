@@ -1,7 +1,8 @@
 #include <iterator>
 
 template<typename Iter, typename T>
-bool Search(Iter a, Iter b, T& x, std::random_access_iterator_tag)
+//bool Search(Iter a, Iter b, T& x, std::random_access_iterator_tag
+bool BSearch(Iter a, Iter b, const T& x)
 {
 	Iter c = a;
 	while(a < b)
@@ -15,7 +16,8 @@ bool Search(Iter a, Iter b, T& x, std::random_access_iterator_tag)
 }
 
 template<typename Iter, typename T>
-bool Search(Iter a, Iter b, T& x, std::input_iterator_tag)
+//bool Search(Iter a, Iter b, T& x, std::input_iterator_tag)
+bool LSearch(Iter a, Iter b,const T& x)
 {
 	while(a!=b && !(*a > x))
 	{
@@ -24,10 +26,27 @@ bool Search(Iter a, Iter b, T& x, std::input_iterator_tag)
 	return false;
 }
 
+template<bool B, typename Iter, typename T>
+struct conditional
+{
+	static bool(*const search)(Iter,Iter,const T&);
+};
+template<bool B, typename Iter, typename T>
+bool(*const conditional<B,Iter,T>::search)(Iter, Iter, const T&) = &LSearch<Iter, T>;
+
+template<typename Iter, typename T>
+struct conditional<true,Iter,T>
+{
+	static bool(*const search)(Iter, Iter, const T&);
+};
+template<typename Iter, typename T>
+bool(*const conditional<true, Iter, T>::search)(Iter, Iter, const T&) = &BSearch<Iter, T>;
+
 template<typename Iter, typename T>
 bool search_in_sorted_sequence(Iter a, Iter b, T x)
 {
-	return Search(a, b, x, typename std::iterator_traits<Iter>::iterator_category() );
+	//return Search(a, b, x, typename std::iterator_traits<Iter>::iterator_category() );
+	return conditional<std::is_base_of<std::random_access_iterator_tag, typename std::iterator_traits<Iter>::iterator_category>::value, Iter, T>::search(a, b, x);
 }
 
 #include <iostream>
