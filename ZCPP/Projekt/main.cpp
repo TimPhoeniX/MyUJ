@@ -348,6 +348,17 @@ public:
 		{
 			CPPUNIT_ASSERT_EQUAL(*(t++), it);
 		}
+		
+		l->assing(array, array + 10);
+		l->erase(std::find(l->begin(),l->end(),3),std::find(l->begin(),l->end(),8));
+		CPPUNIT_ASSERT(!l->empty());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(5), l->size());
+		t = array;
+		for(auto& it : *l)
+		{
+			CPPUNIT_ASSERT_EQUAL(*(t++), it);
+			if(*t==2) t+=4;
+		}
 	}
 };
 
