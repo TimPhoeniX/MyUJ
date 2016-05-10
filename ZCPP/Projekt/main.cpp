@@ -5,6 +5,7 @@
 #include <cppunit/TestCaller.h>
 #include <cppunit/TextTestRunner.h>
 #include <cppunit/TextOutputter.h>
+#include <algorithm>
 #include "uj_list.hpp"
 
 class Constructors : public CppUnit::TestFixture
@@ -253,6 +254,7 @@ public:
 		for(auto it : *l)
 		{
 			CPPUNIT_FAIL("Should not iterate");
+			if(it) return; //Just to remove warnings
 		}
 	}
 
@@ -310,6 +312,42 @@ public:
 		{
 			CPPUNIT_ASSERT_EQUAL(*(t++), it);
 		}
+		
+		l->assing(array, array + 10);
+		l->erase(std::find(l->begin(),l->end(),5));
+		CPPUNIT_ASSERT(!l->empty());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(9), l->size());
+		CPPUNIT_ASSERT( (std::find(l->begin(),l->end(),5) == l->end()) );
+		
+		l->assing(array, array + 10);
+		l->erase(std::find(l->begin(),l->end(),9));
+		CPPUNIT_ASSERT(!l->empty());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(9), l->size());
+		t = array;
+		for(auto& it : *l)
+		{
+			CPPUNIT_ASSERT_EQUAL(*(t++), it);
+		}
+		
+		l->assing(array, array + 10);
+		l->erase(l->begin(),std::find(l->begin(),l->end(),5));
+		CPPUNIT_ASSERT(!l->empty());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(5), l->size());
+		t = array+5;
+		for(auto& it : *l)
+		{
+			CPPUNIT_ASSERT_EQUAL(*(t++), it);
+		}
+		
+		l->assing(array, array + 10);
+		l->erase(std::find(l->begin(),l->end(),5),l->end());
+		CPPUNIT_ASSERT(!l->empty());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(5), l->size());
+		t = array;
+		for(auto& it : *l)
+		{
+			CPPUNIT_ASSERT_EQUAL(*(t++), it);
+		}
 	}
 };
 
@@ -355,6 +393,7 @@ int main()
 	runner.addTest(assign);
 	runner.addTest(accessors);
 	runner.addTest(iterators);
+	runner.addTest(capacity);
 	runner.addTest(modifiers);
 
 	runner.run("",true,true,false);

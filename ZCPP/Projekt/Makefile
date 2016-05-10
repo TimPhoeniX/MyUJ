@@ -1,5 +1,5 @@
 CPPFLAGS=-std=c++11 -Wall -Wextra -pedantic
-CC=g++
+CC=/usr/bin/g++
 Name=uj_list.exe
 Sources=main.cpp
 Headers=uj_list.hpp
@@ -11,7 +11,7 @@ Files=$(Sources) $(Headers) $(Extra)
 default: $(Name)
 
 $(Name): $(Sources) $(Headers)
-	$(CC) -o $@ $(Sources) $(CPPFLAGS)
+	$(CC) -o $@ $(Sources) $(CPPFLAGS) -lcppunit
 
 run: $(Name)
 	./$<
