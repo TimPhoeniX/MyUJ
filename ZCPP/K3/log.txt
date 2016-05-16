@@ -1,0 +1,6 @@
+pushed 1
+pushed 2.5
+popped 2.5
+pushed 7
+popped 7
+popped 1
