@@ -6,6 +6,8 @@
 #include <cppunit/TextTestRunner.h>
 #include <cppunit/TextOutputter.h>
 #include <algorithm>
+#include <utility>
+#include <functional>
 #include "uj_list.hpp"
 
 class Constructors : public CppUnit::TestFixture
@@ -301,64 +303,619 @@ public:
 		}
 	}
 
-	void erase()
+	void erase_f()
 	{
 		l->assing(array, array + 10);
 		l->erase(l->begin());
 		CPPUNIT_ASSERT(!l->empty());
 		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(9), l->size());
-		int* t = array+1;
-		for(auto& it : *l)
+		int* t = array + 1;
+		for (auto& it : *l)
 		{
 			CPPUNIT_ASSERT_EQUAL(*(t++), it);
 		}
-		
+	}
+
+	void erase_m()
+	{
 		l->assing(array, array + 10);
-		l->erase(std::find(l->begin(),l->end(),5));
+		l->erase(std::find(l->begin(), l->end(), 5));
 		CPPUNIT_ASSERT(!l->empty());
 		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(9), l->size());
-		CPPUNIT_ASSERT( (std::find(l->begin(),l->end(),5) == l->end()) );
-		
+		CPPUNIT_ASSERT((std::find(l->begin(), l->end(), 5) == l->end()));
+		int* t = array;
+		for (auto& it : *l)
+		{
+			CPPUNIT_ASSERT_EQUAL(*(t++), it);
+			if (*t == 5) ++t;
+		}
+	}
+
+	void erase_b()
+	{
 		l->assing(array, array + 10);
-		l->erase(std::find(l->begin(),l->end(),9));
+		l->erase(std::find(l->begin(), l->end(), 9));
 		CPPUNIT_ASSERT(!l->empty());
 		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(9), l->size());
-		t = array;
-		for(auto& it : *l)
+		int* t = array;
+		for (auto& it : *l)
 		{
 			CPPUNIT_ASSERT_EQUAL(*(t++), it);
 		}
-		
+	}
+
+	void erase_5f()
+	{
 		l->assing(array, array + 10);
-		l->erase(l->begin(),std::find(l->begin(),l->end(),5));
+		l->erase(l->begin(), std::find(l->begin(), l->end(), 5));
 		CPPUNIT_ASSERT(!l->empty());
 		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(5), l->size());
-		t = array+5;
-		for(auto& it : *l)
+		int* t = array + 5;
+		for (auto& it : *l)
 		{
 			CPPUNIT_ASSERT_EQUAL(*(t++), it);
 		}
-		
+	}
+
+	void erase_5b()
+	{
 		l->assing(array, array + 10);
-		l->erase(std::find(l->begin(),l->end(),5),l->end());
+		l->erase(std::find(l->begin(), l->end(), 5), l->end());
 		CPPUNIT_ASSERT(!l->empty());
 		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(5), l->size());
-		t = array;
-		for(auto& it : *l)
+		int* t = array;
+		for (auto& it : *l)
 		{
 			CPPUNIT_ASSERT_EQUAL(*(t++), it);
 		}
-		
+	}
+
+	void erase_5m()
+	{
 		l->assing(array, array + 10);
 		l->erase(std::find(l->begin(),l->end(),3),std::find(l->begin(),l->end(),8));
 		CPPUNIT_ASSERT(!l->empty());
 		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(5), l->size());
-		t = array;
+		int* t = array;
 		for(auto& it : *l)
 		{
 			CPPUNIT_ASSERT_EQUAL(*(t++), it);
-			if(*t==2) t+=4;
+			if(*t==3) t+=5;
 		}
+	}
+
+	void push_back_e()
+	{
+		l->push_back(99);
+		CPPUNIT_ASSERT(!l->empty());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(1), l->size());
+		CPPUNIT_ASSERT_EQUAL(99, l->front());
+		CPPUNIT_ASSERT_EQUAL(99, l->back());
+	}
+
+	void push_back_n()
+	{
+		l->assing(array, array + 10);
+		l->push_back(99);
+		CPPUNIT_ASSERT(!l->empty());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(11), l->size());
+		CPPUNIT_ASSERT_EQUAL(99, l->back());
+		int* t = array;
+		for (auto& it : *l)
+		{
+			CPPUNIT_ASSERT_EQUAL(*(t++), it);
+			if (it = 99) return;
+		}
+	}
+
+	void pop_back_1()
+	{
+		l->push_back(99);
+		l->pop_back();
+		CPPUNIT_ASSERT(l->empty());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(0), l->size());
+	}
+
+	void pop_back_m()
+	{
+		l->assing(array, array + 10);
+		l->pop_back();
+		CPPUNIT_ASSERT(!l->empty());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(9), l->size());
+		CPPUNIT_ASSERT_EQUAL(8, l->back());
+		int* t = array;
+		for (auto& it : *l)
+		{
+			CPPUNIT_ASSERT_EQUAL(*(t++), it);
+		}
+	}
+
+	void push_front_e()
+	{
+		l->push_front(99);
+		CPPUNIT_ASSERT(!l->empty());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(1), l->size());
+		CPPUNIT_ASSERT_EQUAL(99, l->front());
+		CPPUNIT_ASSERT_EQUAL(99, l->back());
+	}
+
+	void push_front_n()
+	{
+		l->assing(array, array + 10);
+		l->push_front(99);
+		CPPUNIT_ASSERT(!l->empty());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(11), l->size());
+		CPPUNIT_ASSERT_EQUAL(99, l->front());
+		int* t = new int(99);
+		for (auto& it : *l)
+		{
+			if (*t == 99)
+			{
+				CPPUNIT_ASSERT_EQUAL(*t, it);
+				delete t; t = array;
+			}
+			else CPPUNIT_ASSERT_EQUAL(*(t++), it);
+		}
+	}
+
+	void pop_front_1()
+	{
+		l->push_back(99);
+		l->pop_front();
+		CPPUNIT_ASSERT(l->empty());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(0), l->size());
+	}
+
+	void pop_front_m()
+	{
+		l->assing(array, array + 10);
+		l->pop_front();
+		CPPUNIT_ASSERT(!l->empty());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(9), l->size());
+		CPPUNIT_ASSERT_EQUAL(1, l->front());
+		int* t = array+1;
+		for (auto& it : *l)
+		{
+			CPPUNIT_ASSERT_EQUAL(*(t++), it);
+		}
+	}
+
+	void resize_less()
+	{
+		l->assing(array, array + 10);
+		l->resize(5);
+		CPPUNIT_ASSERT(!l->empty());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(5), l->size());
+		int* t = array;
+		for (auto& it : *l)
+		{
+			CPPUNIT_ASSERT_EQUAL(*(t++), it);
+		}
+	}
+
+	void resize_eq()
+	{
+		l->assing(array, array + 10);
+		l->resize(10);
+		CPPUNIT_ASSERT(!l->empty());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(10), l->size());
+		int* t = array;
+		for (auto& it : *l)
+		{
+			CPPUNIT_ASSERT_EQUAL(*(t++), it);
+		}
+	}
+
+	void resize_more()
+	{
+		l->assing(array, array + 10);
+		l->resize(15,72);
+		CPPUNIT_ASSERT(!l->empty());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(15), l->size());
+		int* t = array;
+		for (auto& it : *l)
+		{
+			CPPUNIT_ASSERT_EQUAL(*(t++), it);
+			if (t == array + 10) t = new int[5]{ 72,72,72,72,72 };
+		}
+		t -= 5;
+		delete[] t;
+	}
+
+	void swap_m()
+	{
+		uj::list<int> a(array, array + 10);
+		uj::list<int> b(inserts, inserts + 5);
+		l->operator=(a);
+		uj::list<int> s(b);
+
+		l->swap(s);
+
+		CPPUNIT_ASSERT((*l == b));
+		CPPUNIT_ASSERT((s == a));
+	}
+
+	void swap_f()
+	{
+		uj::list<int> a(array, array + 10);
+		uj::list<int> b(inserts, inserts + 5);
+		l->operator=(a);
+		uj::list<int> s(b);
+
+		swap(*l,s);
+
+		CPPUNIT_ASSERT((*l == b));
+		CPPUNIT_ASSERT((s == a));
+	}
+};
+
+class Operations : public ListTest
+{
+	uj::list<int>* m = nullptr;
+
+	int arra[10]{ 0,1,2,3,4,5,6,7,8,9 };
+	int arrb[10]{ 5,6,7,8,9,10,11,12,13,14 };
+	int mergd[20]{ 0,1,2,3,4,5,5,6,6,7,7,8,8,9,9,10,11,12,13,14 };
+
+public:
+	void setUp()
+	{
+		this->ListTest::setUp();
+		m = new uj::list<int>();
+	}
+
+	void tearDown()
+	{
+		this->ListTest::tearDown();
+		delete m;
+	}
+
+	void merge_a12()
+	{
+		l->assing(arra, arra + 10);
+		m->assing(arrb, arrb + 10);
+
+		l->merge(*m);
+		
+		CPPUNIT_ASSERT(!l->empty());
+		CPPUNIT_ASSERT(m->empty());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(20), l->size());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(0), m->size());
+		int* t = mergd;
+		for (auto& it : *l)
+		{
+			CPPUNIT_ASSERT_EQUAL(*(t++), it);
+		}
+	}
+
+	void merge_a21()
+	{
+		l->assing(arrb, arrb + 10);
+		m->assing(arra, arra + 10);
+
+		l->merge(*m);
+
+		CPPUNIT_ASSERT(!l->empty());
+		CPPUNIT_ASSERT(m->empty());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(20), l->size());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(0), m->size());
+		int* t = mergd;
+		for (auto& it : *l)
+		{
+			CPPUNIT_ASSERT_EQUAL(*(t++), it);
+		}
+	}
+
+	void merge_d12()
+	{
+		std::greater<int> g;
+		std::sort(arra, arra + 10,g);
+		std::sort(arrb, arrb + 10,g);
+		std::sort(mergd, mergd + 20,g);
+		l->assing(arra, arra + 10);
+		m->assing(arrb, arrb + 10);
+
+		l->merge(*m,g);
+
+		CPPUNIT_ASSERT(!l->empty());
+		CPPUNIT_ASSERT(m->empty());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(20), l->size());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(0), m->size());
+		int* t = mergd;
+		for (auto& it : *l)
+		{
+			CPPUNIT_ASSERT_EQUAL(*(t++), it);
+		}
+		std::sort(arra, arra + 10);
+		std::sort(arrb, arrb + 10);
+		std::sort(mergd, mergd + 20);
+	}
+	void merge_d21()
+	{
+		std::greater<int> g;
+		std::sort(arrb, arrb + 10, g);
+		std::sort(arra, arra + 10, g);
+		std::sort(mergd, mergd + 20, g);
+		l->assing(arrb, arrb + 10);
+		m->assing(arra, arra + 10);
+
+		l->merge(*m, g);
+
+		CPPUNIT_ASSERT(!l->empty());
+		CPPUNIT_ASSERT(m->empty());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(20), l->size());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(0), m->size());
+		int* t = mergd;
+		for (auto& it : *l)
+		{
+			CPPUNIT_ASSERT_EQUAL(*(t++), it);
+		}
+		std::sort(arra, arra + 10);
+		std::sort(arrb, arrb + 10);
+		std::sort(mergd, mergd + 20);
+	}
+
+	void splice_f()
+	{
+		l->assing(arra, arra + 10);
+		m->assing(arrb, arrb + 10);
+
+		l->splice(l->begin(),*m);
+
+		CPPUNIT_ASSERT(!l->empty());
+		CPPUNIT_ASSERT(m->empty());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(20), l->size());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(0), m->size());
+		int* t = arrb;
+		for (auto& it : *l)
+		{
+			CPPUNIT_ASSERT_EQUAL(*(t++), it);
+			if (t == arrb + 10) t = arra;
+		}
+	}
+
+	void splice_m()
+	{
+		l->assing(arra, arra + 10);
+		m->assing(arrb, arrb + 10);
+
+		l->splice(std::find(l->begin(),l->end(),4), *m);
+
+		CPPUNIT_ASSERT(!l->empty());
+		CPPUNIT_ASSERT(m->empty());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(20), l->size());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(0), m->size());
+		int* t = arra;
+		for (auto& it : *l)
+		{
+			CPPUNIT_ASSERT_EQUAL(*(t++), it);
+			if (t == arra + 4) t = arrb;
+			else if(t == arrb + 10) t = arra + 4;
+		}
+	}
+
+	void splice_b()
+	{
+		l->assing(arra, arra + 10);
+		m->assing(arrb, arrb + 10);
+
+		l->splice(l->end(), *m);
+
+		CPPUNIT_ASSERT(!l->empty());
+		CPPUNIT_ASSERT(m->empty());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(20), l->size());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(0), m->size());
+		int* t = arra;
+		for (auto& it : *l)
+		{
+			CPPUNIT_ASSERT_EQUAL(*(t++), it);
+			if (t == arra + 10) t = arrb;
+		}
+	}
+
+	void splice_1f()
+	{
+		l->assing(arra, arra + 10);
+		m->assing(arrb, arrb + 10);
+
+		l->splice(l->begin(), *m, std::find(m->begin(), m->end(), 11));
+
+		CPPUNIT_ASSERT(!l->empty());
+		CPPUNIT_ASSERT(!m->empty());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(11), l->size());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(9), m->size());
+		int* t = arrb+6;
+		for (auto& it : *l)
+		{
+			CPPUNIT_ASSERT_EQUAL(*(t++), it);
+			if (t == arrb + 7) t = arra;
+		}
+	}
+
+	void splice_1m()
+	{
+		l->assing(arra, arra + 10);
+		m->assing(arrb, arrb + 10);
+
+		l->splice(std::find(l->begin(), l->end(), 2), *m, std::find(m->begin(), m->end(), 11));
+
+		CPPUNIT_ASSERT(!l->empty());
+		CPPUNIT_ASSERT(!m->empty());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(11), l->size());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(9), m->size());
+		int* t = arra;
+		for (auto& it : *l)
+		{
+			CPPUNIT_ASSERT_EQUAL(*(t++), it);
+			if (t == arra + 2) t = arrb+6;
+			else if(t == arrb + 7) t = arra+2;
+		}
+	}
+
+	void splice_1b()
+	{
+		l->assing(arra, arra + 10);
+		m->assing(arrb, arrb + 10);
+
+		l->splice(l->end(), *m, std::find(m->begin(), m->end(), 11));
+
+		CPPUNIT_ASSERT(!l->empty());
+		CPPUNIT_ASSERT(!m->empty());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(11), l->size());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(9), m->size());
+		int* t = arra;
+		for (auto& it : *l)
+		{
+			CPPUNIT_ASSERT_EQUAL(*(t++), it);
+			if (t == arra + 10) t = arrb + 6;
+		}
+	}
+
+	void splice_if()
+	{
+		l->assing(arra, arra + 10);
+		
+		l->splice(l->begin(), *l, std::find(l->begin(), l->end(), 7));
+
+		CPPUNIT_ASSERT(!l->empty());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(10), l->size());
+		int* temp = new int[10]{ 7,0,1,2,3,4,5,6,8,9 }, *t = temp;
+		for (auto& it : *l)
+		{
+			CPPUNIT_ASSERT_EQUAL(*(t++), it);
+		}
+		delete[] temp;
+	}
+
+	void splice_ib()
+	{
+		l->assing(arra, arra + 10);
+
+		l->splice(l->end(), *l, std::find(l->begin(), l->end(), 6));
+
+		CPPUNIT_ASSERT(!l->empty());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(10), l->size());
+		int* temp = new int[10]{ 0,1,2,3,4,5,7,8,9,6 }, *t = temp;
+		for (auto& it : *l)
+		{
+			CPPUNIT_ASSERT_EQUAL(*(t++), it);
+		}
+		delete[] temp;
+	}
+
+	void splice_ff()
+	{
+		l->assing(arra, arra + 10);
+
+		l->splice(std::find(l->begin(), l->end(), 3), *l,l->begin());
+
+		CPPUNIT_ASSERT(!l->empty());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(10), l->size());
+		int* temp = new int[10]{ 1,2,0,3,4,5,6,7,8,9 }, *t = temp;
+		for (auto& it : *l)
+		{
+			CPPUNIT_ASSERT_EQUAL(*(t++), it);
+		}
+		delete[] temp;
+	}
+
+	void splice_fb()
+	{
+		l->assing(arra, arra + 10);
+
+		l->splice(std::find(l->begin(), l->end(), 5), *l, std::find(l->begin(), l->end(), 9));
+
+		CPPUNIT_ASSERT(!l->empty());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(10), l->size());
+		int* temp = new int[10]{ 0,1,2,3,4,9,5,6,7,8 }, *t = temp;
+		for (auto& it : *l)
+		{
+			CPPUNIT_ASSERT_EQUAL(*(t++), it);
+		}
+		delete[] temp;
+	}
+
+	void remove_f()
+	{
+		l->assing(arra, arra + 10);
+		l->remove(0);
+
+		CPPUNIT_ASSERT(!l->empty());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(9), l->size());
+		int* t = arra+1;
+		for (auto& it : *l)
+		{
+			CPPUNIT_ASSERT_EQUAL(*(t++), it);
+		}
+	}
+
+	void remove_m()
+	{
+		l->assing(arra, arra + 10);
+		l->remove(5);
+
+		CPPUNIT_ASSERT(!l->empty());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(9), l->size());
+		int* t = arra;
+		for (auto& it : *l)
+		{
+			CPPUNIT_ASSERT_EQUAL(*(t++), it);
+			if (*t == 5) ++t;
+		}
+	}
+
+	void remove_b()
+	{
+		l->assing(arra, arra + 10);
+		l->remove(9);
+
+		CPPUNIT_ASSERT(!l->empty());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(9), l->size());
+		int* t = arra;
+		for (auto& it : *l)
+		{
+			CPPUNIT_ASSERT_EQUAL(*(t++), it);
+		}
+	}
+
+	void remove_if_odd()
+	{
+		l->assing(arra, arra + 10);
+		l->remove_if([](int a)->bool {return a % 2; });
+
+		CPPUNIT_ASSERT(!l->empty());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(5), l->size());
+		int* t = arra;
+		for (auto& it : *l)
+		{
+			if ((*t)%2==1) ++t;
+			CPPUNIT_ASSERT_EQUAL(*(t++), it);
+		}
+	}
+
+	void remove_if_even()
+	{
+		l->assing(arra, arra + 10);
+		l->remove_if([](int a)->bool {return !(a % 2); });
+
+		CPPUNIT_ASSERT(!l->empty());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(5), l->size());
+		int* t = arra;
+		for (auto& it : *l)
+		{
+			if ((*t) % 2 == 0) ++t;
+			CPPUNIT_ASSERT_EQUAL(*(t++), it);
+		}
+	}
+
+	void reverse_s()
+	{
+
+	}
+
+	void reverse_u()
+	{
+
 	}
 };
 
@@ -380,24 +937,100 @@ int main()
 	assign->addTest(new CppUnit::TestCaller<Assign>("Operator assignment", &Assign::oper));
 
 	CppUnit::TestSuite* accessors = new CppUnit::TestSuite("Accessors tests");
-	assign->addTest(new CppUnit::TestCaller<Accessors>("Empty access", &Accessors::empty));
-	assign->addTest(new CppUnit::TestCaller<Accessors>("Single element access", &Accessors::one));
-	assign->addTest(new CppUnit::TestCaller<Accessors>("More element access", &Accessors::two));
+	accessors->addTest(new CppUnit::TestCaller<Accessors>("Empty access", &Accessors::empty));
+	accessors->addTest(new CppUnit::TestCaller<Accessors>("Single element access", &Accessors::one));
+	accessors->addTest(new CppUnit::TestCaller<Accessors>("More element access", &Accessors::two));
 
 	CppUnit::TestSuite* iterators = new CppUnit::TestSuite("Iterators tests");
-	assign->addTest(new CppUnit::TestCaller<Iterators>("Empty list iterators", &Iterators::empty));
-	assign->addTest(new CppUnit::TestCaller<Iterators>("Iterating over list", &Iterators::iterating));
-	assign->addTest(new CppUnit::TestCaller<Iterators>("Iterating over const list", &Iterators::const_iterating));
+	iterators->addTest(new CppUnit::TestCaller<Iterators>("Empty list iterators", &Iterators::empty));
+	iterators->addTest(new CppUnit::TestCaller<Iterators>("Iterating over list", &Iterators::iterating));
+	iterators->addTest(new CppUnit::TestCaller<Iterators>("Iterating over const list", &Iterators::const_iterating));
 
 	CppUnit::TestSuite* capacity = new CppUnit::TestSuite("Capacity tests");
-	assign->addTest(new CppUnit::TestCaller<Capacity>("Empty", &Capacity::empty));
-	assign->addTest(new CppUnit::TestCaller<Capacity>("Max Size", &Capacity::max));
-	assign->addTest(new CppUnit::TestCaller<Capacity>("With elements", &Capacity::elems));
+	capacity->addTest(new CppUnit::TestCaller<Capacity>("Empty", &Capacity::empty));
+	capacity->addTest(new CppUnit::TestCaller<Capacity>("Max Size", &Capacity::max));
+	capacity->addTest(new CppUnit::TestCaller<Capacity>("With elements", &Capacity::elems));
 
 	CppUnit::TestSuite* modifiers = new CppUnit::TestSuite("Modifying tests");
-	assign->addTest(new CppUnit::TestCaller<Modifiers>("Clear", &Modifiers::clear));
-	assign->addTest(new CppUnit::TestCaller<Modifiers>("Insert", &Modifiers::insert));
-	assign->addTest(new CppUnit::TestCaller<Modifiers>("Erase", &Modifiers::erase));
+	modifiers->addTest(new CppUnit::TestCaller<Modifiers>("Clear", &Modifiers::clear));
+	modifiers->addTest(new CppUnit::TestCaller<Modifiers>("Insert", &Modifiers::insert));
+
+	CppUnit::TestSuite* erase = new CppUnit::TestSuite("Erase");
+	erase->addTest(new CppUnit::TestCaller<Modifiers>("Erase front", &Modifiers::erase_f));
+	erase->addTest(new CppUnit::TestCaller<Modifiers>("Erase middle", &Modifiers::erase_m));
+	erase->addTest(new CppUnit::TestCaller<Modifiers>("Erase back", &Modifiers::erase_b));
+	erase->addTest(new CppUnit::TestCaller<Modifiers>("Erase many from front", &Modifiers::erase_5f));
+	erase->addTest(new CppUnit::TestCaller<Modifiers>("Erase many from middle", &Modifiers::erase_5m));
+	erase->addTest(new CppUnit::TestCaller<Modifiers>("Erase many from back", &Modifiers::erase_5b));
+	modifiers->addTest(erase);
+
+	CppUnit::TestSuite* push_back = new CppUnit::TestSuite("Push_back");
+	push_back->addTest(new CppUnit::TestCaller<Modifiers>("Push_back on empty", &Modifiers::push_back_e));
+	push_back->addTest(new CppUnit::TestCaller<Modifiers>("Push_back on non-empty", &Modifiers::push_back_n));
+	modifiers->addTest(push_back);
+
+	CppUnit::TestSuite* pop_back = new CppUnit::TestSuite("Pop_back");
+	pop_back->addTest(new CppUnit::TestCaller<Modifiers>("Pop_back on 1 elements", &Modifiers::pop_back_1));
+	pop_back->addTest(new CppUnit::TestCaller<Modifiers>("Pop_back on with many elements", &Modifiers::pop_back_m));
+	modifiers->addTest(pop_back);
+
+	CppUnit::TestSuite* push_front = new CppUnit::TestSuite("Push_front");
+	push_front->addTest(new CppUnit::TestCaller<Modifiers>("Push_front on empty", &Modifiers::push_front_e));
+	push_front->addTest(new CppUnit::TestCaller<Modifiers>("Push_front on non-empty", &Modifiers::push_front_n));
+	modifiers->addTest(push_front);
+
+	CppUnit::TestSuite* pop_front = new CppUnit::TestSuite("Pop_front");
+	pop_front->addTest(new CppUnit::TestCaller<Modifiers>("Pop_front on 1 elements", &Modifiers::pop_front_1));
+	pop_front->addTest(new CppUnit::TestCaller<Modifiers>("Pop_front on with many elements", &Modifiers::pop_front_m));
+	modifiers->addTest(pop_front);
+
+	CppUnit::TestSuite* resize = new CppUnit::TestSuite("Resize");
+	resize->addTest(new CppUnit::TestCaller<Modifiers>("Resize with less", &Modifiers::resize_less));
+	resize->addTest(new CppUnit::TestCaller<Modifiers>("Resize with equal", &Modifiers::resize_eq));
+	resize->addTest(new CppUnit::TestCaller<Modifiers>("Resize with more", &Modifiers::resize_more));
+	modifiers->addTest(resize);
+
+	CppUnit::TestSuite* swap = new CppUnit::TestSuite("Swap");
+	swap->addTest(new CppUnit::TestCaller<Modifiers>("Swap member function", &Modifiers::swap_m));
+	swap->addTest(new CppUnit::TestCaller<Modifiers>("Swap free function", &Modifiers::swap_f));
+	modifiers->addTest(swap);
+
+
+	CppUnit::TestSuite* operations = new CppUnit::TestSuite("Operations tests");
+
+	CppUnit::TestSuite* merge = new CppUnit::TestSuite("Merge");
+	merge->addTest(new CppUnit::TestCaller<Operations>("Merge ascending order 1 to 2 ", &Operations::merge_a12));
+	merge->addTest(new CppUnit::TestCaller<Operations>("Merge ascending order 2 to 1 ", &Operations::merge_a21));
+	merge->addTest(new CppUnit::TestCaller<Operations>("Merge descending order 1 to 2 ", &Operations::merge_d12));
+	merge->addTest(new CppUnit::TestCaller<Operations>("Merge descending order 2 to 1 ", &Operations::merge_d21));
+	operations->addTest(merge);
+
+	CppUnit::TestSuite* splice = new CppUnit::TestSuite("Splice");
+	splice->addTest(new CppUnit::TestCaller<Operations>("Splice all to front", &Operations::splice_f));
+	splice->addTest(new CppUnit::TestCaller<Operations>("Splice all to middle", &Operations::splice_m));
+	splice->addTest(new CppUnit::TestCaller<Operations>("Splice all to back", &Operations::splice_b));
+	splice->addTest(new CppUnit::TestCaller<Operations>("Splice 1 to front", &Operations::splice_1f));
+	splice->addTest(new CppUnit::TestCaller<Operations>("Splice 1 to middle", &Operations::splice_1m));
+	splice->addTest(new CppUnit::TestCaller<Operations>("Splice 1 to back", &Operations::splice_1b));
+	splice->addTest(new CppUnit::TestCaller<Operations>("Splice 1 inside to front", &Operations::splice_if));
+	splice->addTest(new CppUnit::TestCaller<Operations>("Splice 1 inside to back", &Operations::splice_ib));
+	splice->addTest(new CppUnit::TestCaller<Operations>("Splice 1 inside from front", &Operations::splice_ff));
+	splice->addTest(new CppUnit::TestCaller<Operations>("Splice 1 inside from back", &Operations::splice_fb));
+	operations->addTest(splice);
+
+	CppUnit::TestSuite* remove = new CppUnit::TestSuite("Remove/_if");
+	remove->addTest(new CppUnit::TestCaller<Operations>("Remove front", &Operations::remove_f));
+	remove->addTest(new CppUnit::TestCaller<Operations>("Remove middle", &Operations::remove_m));
+	remove->addTest(new CppUnit::TestCaller<Operations>("Remove back", &Operations::remove_b));
+	remove->addTest(new CppUnit::TestCaller<Operations>("Remove odd", &Operations::remove_if_odd));
+	remove->addTest(new CppUnit::TestCaller<Operations>("Remove even", &Operations::remove_if_even));
+	operations->addTest(remove);
+
+	CppUnit::TestSuite* reverse = new CppUnit::TestSuite("Reverse");
+	remove->addTest(new CppUnit::TestCaller<Operations>("Reverse sorted", &Operations::reverse_s));
+	remove->addTest(new CppUnit::TestCaller<Operations>("Reverse unsorted", &Operations::reverse_u));
+	operations->addTest(reverse);
+
 
 	runner.addTest(constructors);
 	runner.addTest(new Alloc());
@@ -406,6 +1039,7 @@ int main()
 	runner.addTest(iterators);
 	runner.addTest(capacity);
 	runner.addTest(modifiers);
+	runner.addTest(operations);
 
 	runner.run("",true,true,false);
 }

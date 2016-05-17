@@ -499,6 +499,7 @@ namespace uj
 			other.lSize=0;
 			if(pos.pnode==this->tail) this->tail=other.tail;
 			other.tail = &other.head;
+			other.head.next = nullptr;
 		}
 		
 		void splice(const_iterator pos, list& other, const_iterator it)
@@ -507,11 +508,11 @@ namespace uj
 			auto tmp = it.pnode->next;
 			it.pnode->next = it.pnode->next->next;
 			if(it.pnode->next==other.tail) other.tail = it.pnode;
-			--this->lSize;
+			++this->lSize;
 			tmp->next=pos.pnode->next;
 			pos.pnode->next = tmp;
 			if(pos.pnode==this->tail) this->tail = tmp;
-			++other.lSize;
+			--other.lSize;
 		}
 		
 		void splice(const_iterator pos, list& other, const_iterator first, const_iterator last)
