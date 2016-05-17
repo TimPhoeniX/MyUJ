@@ -30,7 +30,7 @@ namespace uj
 			{}
 		};
 	
-	public:
+//	public:
 		class citer
 		{
 			friend class list;
@@ -243,19 +243,19 @@ namespace uj
 				{
 					this->alloc = other.alloc;
 				}
-				this->assing(other.begin(),other.end());
+				this->assign(other.begin(),other.end());
 			}
 			return *this;
 		}
 
-		void assing(size_type count, const T& value)
+		void assign(size_type count, const T& value)
 		{
 			this->clear();
 			this->insert(this->begin(),count,value);
 		}
 		
 		template<typename InIterator>
-		void assing(InIterator first, InIterator last)
+		void assign(InIterator first, InIterator last)
 		{
 			this->clear();
 			this->insert(this->begin(),first,last);
@@ -685,11 +685,9 @@ namespace uj
 		auto a = lhs.begin(), b = rhs.begin(), aend = lhs.end(), bend = rhs.end();
 		for(;(a!=aend) && (b != bend); ++a, ++b)
 		{
-			std::cout << *a << ' ' << *b << std::endl;
 			if(*a > *b) return true;
 			if(*b > *a) return false;
 		}
-		std::cout << (a==aend) << ' ' << (b!=bend) << std::endl;
 		return (a!=aend) && (b==bend);
 	}
 	

@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <utility>
 #include <functional>
+#include <iostream>
 #include "uj_list.hpp"
 
 class Constructors : public CppUnit::TestFixture
@@ -112,7 +113,7 @@ private:
 public:
 	void count()
 	{
-		l->assing(5u, 5);
+		l->assign(5u, 5);
 		CPPUNIT_ASSERT(!l->empty());
 		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(5), l->size());
 		for(auto& it : *l)
@@ -120,14 +121,14 @@ public:
 			CPPUNIT_ASSERT_EQUAL(5, it);
 		}
 
-		l->assing(0u, 0);
+		l->assign(0u, 0);
 		CPPUNIT_ASSERT(l->empty());
 		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(0), l->size());
 	}
 
 	void range()
 	{
-		l->assing(array, array + 10);
+		l->assign(array, array + 10);
 		CPPUNIT_ASSERT(!l->empty());
 		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(10), l->size());
 		int* t = array;
@@ -136,7 +137,7 @@ public:
 			CPPUNIT_ASSERT_EQUAL(*(t++), it);
 		}
 
-		l->assing(array, array);
+		l->assign(array, array);
 		CPPUNIT_ASSERT(l->empty());
 		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(0), l->size());
 	}
@@ -170,7 +171,7 @@ public:
 
 	void one()
 	{
-		l->assing(1u, 1);
+		l->assign(1u, 1);
 		CPPUNIT_ASSERT_EQUAL(1, l->front());
 		CPPUNIT_ASSERT_EQUAL(1, l->back());
 		CPPUNIT_ASSERT_EQUAL(l->front(), l->back());
@@ -179,7 +180,7 @@ public:
 	void two()
 	{
 		int array[]{ 1,2 };
-		l->assing(array, array + 2);
+		l->assign(array, array + 2);
 		CPPUNIT_ASSERT_EQUAL(1, l->front());
 		CPPUNIT_ASSERT_EQUAL(2, l->back());
 	}
@@ -198,7 +199,7 @@ public:
 	void iterating()
 	{
 		int array[]{ 0,1,2,3,4,5,6,7,8,9 };
-		l->assing(array, array + 10);
+		l->assign(array, array + 10);
 		int* arr = array;
 		for(auto b = l->begin(), e = l->end(); b != e; ++b)
 		{
@@ -209,7 +210,7 @@ public:
 	void const_iterating()
 	{
 		int array[]{ 0,1,2,3,4,5,6,7,8,9 };
-		l->assing(array, array + 10);
+		l->assign(array, array + 10);
 		int* arr = array;
 		auto cl = const_cast<const uj::list<int>*>(l);
 		for(auto b = cl->begin(), e = cl->end(); b != e; ++b)
@@ -236,7 +237,7 @@ public:
 	void elems()
 	{
 		int array[]{ 0,1,2,3,4,5,6,7,8,9 };
-		l->assing(array, array + 10);
+		l->assign(array, array + 10);
 		CPPUNIT_ASSERT(!l->empty());
 		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(10), l->size());
 	}
@@ -249,7 +250,7 @@ class Modifiers : public ListTest
 public:
 	void clear()
 	{
-		l->assing(array, array + 10);
+		l->assign(array, array + 10);
 		l->clear();
 		CPPUNIT_ASSERT(l->empty());
 		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(0), l->size());
@@ -305,7 +306,7 @@ public:
 
 	void erase_f()
 	{
-		l->assing(array, array + 10);
+		l->assign(array, array + 10);
 		l->erase(l->begin());
 		CPPUNIT_ASSERT(!l->empty());
 		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(9), l->size());
@@ -318,7 +319,7 @@ public:
 
 	void erase_m()
 	{
-		l->assing(array, array + 10);
+		l->assign(array, array + 10);
 		l->erase(std::find(l->begin(), l->end(), 5));
 		CPPUNIT_ASSERT(!l->empty());
 		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(9), l->size());
@@ -333,7 +334,7 @@ public:
 
 	void erase_b()
 	{
-		l->assing(array, array + 10);
+		l->assign(array, array + 10);
 		l->erase(std::find(l->begin(), l->end(), 9));
 		CPPUNIT_ASSERT(!l->empty());
 		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(9), l->size());
@@ -346,7 +347,7 @@ public:
 
 	void erase_5f()
 	{
-		l->assing(array, array + 10);
+		l->assign(array, array + 10);
 		l->erase(l->begin(), std::find(l->begin(), l->end(), 5));
 		CPPUNIT_ASSERT(!l->empty());
 		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(5), l->size());
@@ -359,7 +360,7 @@ public:
 
 	void erase_5b()
 	{
-		l->assing(array, array + 10);
+		l->assign(array, array + 10);
 		l->erase(std::find(l->begin(), l->end(), 5), l->end());
 		CPPUNIT_ASSERT(!l->empty());
 		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(5), l->size());
@@ -372,7 +373,7 @@ public:
 
 	void erase_5m()
 	{
-		l->assing(array, array + 10);
+		l->assign(array, array + 10);
 		l->erase(std::find(l->begin(),l->end(),3),std::find(l->begin(),l->end(),8));
 		CPPUNIT_ASSERT(!l->empty());
 		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(5), l->size());
@@ -395,7 +396,7 @@ public:
 
 	void push_back_n()
 	{
-		l->assing(array, array + 10);
+		l->assign(array, array + 10);
 		l->push_back(99);
 		CPPUNIT_ASSERT(!l->empty());
 		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(11), l->size());
@@ -403,8 +404,8 @@ public:
 		int* t = array;
 		for (auto& it : *l)
 		{
+			if (it == 99) return;
 			CPPUNIT_ASSERT_EQUAL(*(t++), it);
-			if (it = 99) return;
 		}
 	}
 
@@ -418,7 +419,7 @@ public:
 
 	void pop_back_m()
 	{
-		l->assing(array, array + 10);
+		l->assign(array, array + 10);
 		l->pop_back();
 		CPPUNIT_ASSERT(!l->empty());
 		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(9), l->size());
@@ -441,7 +442,7 @@ public:
 
 	void push_front_n()
 	{
-		l->assing(array, array + 10);
+		l->assign(array, array + 10);
 		l->push_front(99);
 		CPPUNIT_ASSERT(!l->empty());
 		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(11), l->size());
@@ -468,7 +469,7 @@ public:
 
 	void pop_front_m()
 	{
-		l->assing(array, array + 10);
+		l->assign(array, array + 10);
 		l->pop_front();
 		CPPUNIT_ASSERT(!l->empty());
 		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(9), l->size());
@@ -482,7 +483,7 @@ public:
 
 	void resize_less()
 	{
-		l->assing(array, array + 10);
+		l->assign(array, array + 10);
 		l->resize(5);
 		CPPUNIT_ASSERT(!l->empty());
 		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(5), l->size());
@@ -495,7 +496,7 @@ public:
 
 	void resize_eq()
 	{
-		l->assing(array, array + 10);
+		l->assign(array, array + 10);
 		l->resize(10);
 		CPPUNIT_ASSERT(!l->empty());
 		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(10), l->size());
@@ -508,7 +509,7 @@ public:
 
 	void resize_more()
 	{
-		l->assing(array, array + 10);
+		l->assign(array, array + 10);
 		l->resize(15,72);
 		CPPUNIT_ASSERT(!l->empty());
 		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(15), l->size());
@@ -572,8 +573,8 @@ public:
 
 	void merge_a12()
 	{
-		l->assing(arra, arra + 10);
-		m->assing(arrb, arrb + 10);
+		l->assign(arra, arra + 10);
+		m->assign(arrb, arrb + 10);
 
 		l->merge(*m);
 		
@@ -590,8 +591,8 @@ public:
 
 	void merge_a21()
 	{
-		l->assing(arrb, arrb + 10);
-		m->assing(arra, arra + 10);
+		l->assign(arrb, arrb + 10);
+		m->assign(arra, arra + 10);
 
 		l->merge(*m);
 
@@ -612,8 +613,8 @@ public:
 		std::sort(arra, arra + 10,g);
 		std::sort(arrb, arrb + 10,g);
 		std::sort(mergd, mergd + 20,g);
-		l->assing(arra, arra + 10);
-		m->assing(arrb, arrb + 10);
+		l->assign(arra, arra + 10);
+		m->assign(arrb, arrb + 10);
 
 		l->merge(*m,g);
 
@@ -636,8 +637,8 @@ public:
 		std::sort(arrb, arrb + 10, g);
 		std::sort(arra, arra + 10, g);
 		std::sort(mergd, mergd + 20, g);
-		l->assing(arrb, arrb + 10);
-		m->assing(arra, arra + 10);
+		l->assign(arrb, arrb + 10);
+		m->assign(arra, arra + 10);
 
 		l->merge(*m, g);
 
@@ -657,8 +658,8 @@ public:
 
 	void splice_f()
 	{
-		l->assing(arra, arra + 10);
-		m->assing(arrb, arrb + 10);
+		l->assign(arra, arra + 10);
+		m->assign(arrb, arrb + 10);
 
 		l->splice(l->begin(),*m);
 
@@ -676,8 +677,8 @@ public:
 
 	void splice_m()
 	{
-		l->assing(arra, arra + 10);
-		m->assing(arrb, arrb + 10);
+		l->assign(arra, arra + 10);
+		m->assign(arrb, arrb + 10);
 
 		l->splice(std::find(l->begin(),l->end(),4), *m);
 
@@ -696,8 +697,8 @@ public:
 
 	void splice_b()
 	{
-		l->assing(arra, arra + 10);
-		m->assing(arrb, arrb + 10);
+		l->assign(arra, arra + 10);
+		m->assign(arrb, arrb + 10);
 
 		l->splice(l->end(), *m);
 
@@ -715,8 +716,8 @@ public:
 
 	void splice_1f()
 	{
-		l->assing(arra, arra + 10);
-		m->assing(arrb, arrb + 10);
+		l->assign(arra, arra + 10);
+		m->assign(arrb, arrb + 10);
 
 		l->splice(l->begin(), *m, std::find(m->begin(), m->end(), 11));
 
@@ -734,8 +735,8 @@ public:
 
 	void splice_1m()
 	{
-		l->assing(arra, arra + 10);
-		m->assing(arrb, arrb + 10);
+		l->assign(arra, arra + 10);
+		m->assign(arrb, arrb + 10);
 
 		l->splice(std::find(l->begin(), l->end(), 2), *m, std::find(m->begin(), m->end(), 11));
 
@@ -754,8 +755,8 @@ public:
 
 	void splice_1b()
 	{
-		l->assing(arra, arra + 10);
-		m->assing(arrb, arrb + 10);
+		l->assign(arra, arra + 10);
+		m->assign(arrb, arrb + 10);
 
 		l->splice(l->end(), *m, std::find(m->begin(), m->end(), 11));
 
@@ -773,7 +774,7 @@ public:
 
 	void splice_if()
 	{
-		l->assing(arra, arra + 10);
+		l->assign(arra, arra + 10);
 		
 		l->splice(l->begin(), *l, std::find(l->begin(), l->end(), 7));
 
@@ -789,7 +790,7 @@ public:
 
 	void splice_ib()
 	{
-		l->assing(arra, arra + 10);
+		l->assign(arra, arra + 10);
 
 		l->splice(l->end(), *l, std::find(l->begin(), l->end(), 6));
 
@@ -805,7 +806,7 @@ public:
 
 	void splice_ff()
 	{
-		l->assing(arra, arra + 10);
+		l->assign(arra, arra + 10);
 
 		l->splice(std::find(l->begin(), l->end(), 3), *l,l->begin());
 
@@ -821,7 +822,7 @@ public:
 
 	void splice_fb()
 	{
-		l->assing(arra, arra + 10);
+		l->assign(arra, arra + 10);
 
 		l->splice(std::find(l->begin(), l->end(), 5), *l, std::find(l->begin(), l->end(), 9));
 
@@ -837,7 +838,7 @@ public:
 
 	void remove_f()
 	{
-		l->assing(arra, arra + 10);
+		l->assign(arra, arra + 10);
 		l->remove(0);
 
 		CPPUNIT_ASSERT(!l->empty());
@@ -851,7 +852,7 @@ public:
 
 	void remove_m()
 	{
-		l->assing(arra, arra + 10);
+		l->assign(arra, arra + 10);
 		l->remove(5);
 
 		CPPUNIT_ASSERT(!l->empty());
@@ -866,7 +867,7 @@ public:
 
 	void remove_b()
 	{
-		l->assing(arra, arra + 10);
+		l->assign(arra, arra + 10);
 		l->remove(9);
 
 		CPPUNIT_ASSERT(!l->empty());
@@ -880,7 +881,7 @@ public:
 
 	void remove_if_odd()
 	{
-		l->assing(arra, arra + 10);
+		l->assign(arra, arra + 10);
 		l->remove_if([](int a)->bool {return a % 2; });
 
 		CPPUNIT_ASSERT(!l->empty());
@@ -895,7 +896,7 @@ public:
 
 	void remove_if_even()
 	{
-		l->assing(arra, arra + 10);
+		l->assign(arra, arra + 10);
 		l->remove_if([](int a)->bool {return !(a % 2); });
 
 		CPPUNIT_ASSERT(!l->empty());
@@ -910,12 +911,61 @@ public:
 
 	void reverse_s()
 	{
-
+		l->assign(arra,arra+10);
+		std::sort(arra,arra+10,std::greater<int>());
+		l->reverse();
+		CPPUNIT_ASSERT(!l->empty());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(10), l->size());
+		int* t = arra;
+		for (auto& it : *l)
+		{
+			CPPUNIT_ASSERT_EQUAL(*(t++), it);
+		}
+		std::sort(arra,arra+10);
 	}
 
 	void reverse_u()
 	{
-
+		std::random_shuffle(arra,arra+10);
+		l->assign(arra,arra+10);
+		l->reverse();
+		std::reverse(arra,arra+10);
+		CPPUNIT_ASSERT(!l->empty());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(10), l->size());
+		int* t = arra;
+		for (auto& it : *l)
+		{
+			CPPUNIT_ASSERT_EQUAL(*(t++), it);
+		}
+		std::sort(arra,arra+10);
+	}
+	
+	void unique()
+	{
+		int duplicates[] {1,2,2,2,1,4,5,4,6,6,6};
+		int after[] {1,2,1,4,5,4,6};
+		l->assign(duplicates,duplicates+10);
+		l->unique();
+		CPPUNIT_ASSERT(!l->empty());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(7), l->size());
+		int* t = after;
+		for (auto& it : *l)
+		{
+			CPPUNIT_ASSERT_EQUAL(*(t++), it);
+		}
+	}
+	
+	void unique_p()
+	{
+		l->assign(arra,arra+10);
+		l->unique(std::less<int>());
+		CPPUNIT_ASSERT(!l->empty());
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(1), l->size());
+		int* t = arra;
+		for (auto& it : *l)
+		{
+			CPPUNIT_ASSERT_EQUAL(*(t++), it);
+		}
 	}
 };
 
@@ -1031,7 +1081,16 @@ int main()
 	remove->addTest(new CppUnit::TestCaller<Operations>("Reverse unsorted", &Operations::reverse_u));
 	operations->addTest(reverse);
 
+	CppUnit::TestSuite* unique = new CppUnit::TestSuite("Unique");
+	unique->addTest(new CppUnit::TestCaller<Operations>("Unique value", &Operations::unique));
+	unique->addTest(new CppUnit::TestCaller<Operations>("Unique predicate", &Operations::unique_p));
+	operations->addTest(unique);
 
+	CppUnit::TestSuite* sort = new CppUnit::TestSuite("Sort");
+	sort->addTest(new CppUnit::TestCaller<Operations>("Sort", &Operations::sort));
+	sort->addTest(new CppUnit::TestCaller<Operations>("Sort predicate", &Operations::sort_p));
+	operations->addTest(sort);
+	
 	runner.addTest(constructors);
 	runner.addTest(new Alloc());
 	runner.addTest(assign);
