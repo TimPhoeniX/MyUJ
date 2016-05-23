@@ -164,9 +164,9 @@ class Accessors : public ListTest
 public:
 	void empty()
 	{
-		//Weird, but ok.
-		CPPUNIT_ASSERT_NO_THROW(l->front());
-		CPPUNIT_ASSERT_NO_THROW(l->back());
+		CPPUNIT_ASSERT(l->empty());
+		l->push_back(5);
+		CPPUNIT_ASSERT(!l->empty());
 	}
 
 	void one()
@@ -261,43 +261,51 @@ public:
 		}
 	}
 
-	void insert()
+	void insert_e()
 	{
 		l->insert(l->begin(), 6u, 7);
 		CPPUNIT_ASSERT(!l->empty());
 		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(6), l->size());
-		for(auto& it : *l)
+		for (auto& it : *l)
 		{
-			CPPUNIT_ASSERT_EQUAL(7,it);
+			CPPUNIT_ASSERT_EQUAL(7, it);
 		}
+	}
 
+	void insert_m()
+	{
+		l->assign(array, array + 10);
 		auto third = l->begin();
 		++++third;
-		auto inserted = l->insert(third,5);
-		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(7), l->size());
+		auto inserted = l->insert(third, 5);
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(11), l->size());
 		CPPUNIT_ASSERT_EQUAL(5, *inserted);
+	}
 
-		inserted = l->insert(l->begin(), 5);
-		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(8), l->size());
+	void insert_f()
+	{
+		l->assign(array, array + 10);
+		auto inserted = l->insert(l->begin(), 5);
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(11), l->size());
 		CPPUNIT_ASSERT_EQUAL(5, *inserted);
 		CPPUNIT_ASSERT_EQUAL(5, l->front());
+	}
 
-		inserted = l->insert(l->end(), 5);
-		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(9), l->size());
+	void insert_b()
+	{
+		l->assign(array, array + 10);
+		auto inserted = l->insert(l->end(), 5);
+		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(11), l->size());
 		CPPUNIT_ASSERT_EQUAL(5, *inserted);
 		CPPUNIT_ASSERT_EQUAL(5, l->back());
-
-		int* t = inserts;
-		for(auto& it : *l)
-		{
-			CPPUNIT_ASSERT_EQUAL(*(t++), it);
-		}
-
-		l->clear();
+	}
+	
+	void insert_r()
+	{
 		l->insert(l->begin(), array, array+10);
 		CPPUNIT_ASSERT(!l->empty());
 		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(10), l->size());
-		t = array;
+		int* t = array;
 		for(auto& it : *l)
 		{
 			CPPUNIT_ASSERT_EQUAL(*(t++), it);
@@ -882,7 +890,7 @@ public:
 	void remove_if_odd()
 	{
 		l->assign(arra, arra + 10);
-		l->remove_if([](int a)->bool {return a % 2; });
+		l->remove_if([](int a)->bool {return (a%2)==1; });
 
 		CPPUNIT_ASSERT(!l->empty());
 		CPPUNIT_ASSERT_EQUAL(uj::list<int>::size_type(5), l->size());
@@ -967,6 +975,110 @@ public:
 			CPPUNIT_ASSERT_EQUAL(*(t++), it);
 		}
 	}
+
+	void sort()
+	{
+		std::random_shuffle(arra, arra + 10);
+		l->assign(arra, arra + 10);
+		std::sort(arra, arra + 10);
+		l->sort();
+		CPPUNIT_ASSERT(std::is_sorted(l->begin(), l->end()));
+	}
+
+	void sort_p()
+	{
+		std::random_shuffle(arra, arra + 10);
+		l->assign(arra, arra + 10);
+		std::sort(arra, arra + 10);
+		l->sort(std::greater<int>());
+		CPPUNIT_ASSERT(std::is_sorted(l->begin(), l->end(), std::greater<int>()));
+	}
+};
+
+class Comparators : public ListTest
+{
+	uj::list<int>* t = nullptr;
+	int arr1[5]{ 0,1,2,3,4 };
+	int arr2[5]{ 3,4,5,6,7 };
+public:
+	void setUp() override
+	{
+		this->ListTest::setUp();
+		t = new uj::list<int>();
+	}
+
+	void tearDown() override
+	{
+		this->ListTest::tearDown();
+		delete t;
+	}
+
+	void eq()
+	{
+		l->assign(arr1, arr1 + 5);
+		t->assign(arr1, arr1 + 5);
+		CPPUNIT_ASSERT((*l == *t));
+		t->assign(arr2, arr2 + 5);
+		CPPUNIT_ASSERT(!(*l == *t));
+		t->assign(arr1, arr1 + 4);
+		CPPUNIT_ASSERT(!(*l == *t));
+	}
+
+	void uneq()
+	{
+		l->assign(arr1, arr1 + 5);
+		t->assign(arr1, arr1 + 5);
+		CPPUNIT_ASSERT(!(*l != *t));
+		t->assign(arr2, arr2 + 5);
+		CPPUNIT_ASSERT((*l != *t));
+		t->assign(arr1, arr1 + 4);
+		CPPUNIT_ASSERT((*l != *t));
+	}
+
+	void less()
+	{
+		l->assign(arr1, arr1 + 5);
+		t->assign(arr1, arr1 + 5);
+		CPPUNIT_ASSERT(!(*l < *t));
+		t->assign(arr2, arr2 + 5);
+		CPPUNIT_ASSERT((*l < *t));
+		t->assign(arr1, arr1 + 4);
+		CPPUNIT_ASSERT((*t < *l));
+	}
+
+	void less_eq()
+	{
+		l->assign(arr1, arr1 + 5);
+		t->assign(arr1, arr1 + 5);
+		CPPUNIT_ASSERT((*l <= *t));
+		t->assign(arr2, arr2 + 5);
+		CPPUNIT_ASSERT((*l <= *t));
+		t->assign(arr1, arr1 + 4);
+		CPPUNIT_ASSERT((*t <= *l));
+	}
+
+	void greater()
+	{
+		l->assign(arr1, arr1 + 5);
+		t->assign(arr1, arr1 + 5);
+		CPPUNIT_ASSERT(!(*l > *t));
+		t->assign(arr2, arr2 + 5);
+		CPPUNIT_ASSERT((*t > *l));
+		t->assign(arr1, arr1 + 4);
+		CPPUNIT_ASSERT((*l > *t));
+	}
+
+	void greater_eq()
+	{
+		l->assign(arr1, arr1 + 5);
+		t->assign(arr1, arr1 + 5);
+		CPPUNIT_ASSERT((*l >= *t));
+		t->assign(arr2, arr2 + 5);
+		CPPUNIT_ASSERT((*t >= *l));
+		t->assign(arr1, arr1 + 4);
+		CPPUNIT_ASSERT((*l >= *t));
+	}
+
 };
 
 int main()
@@ -1003,7 +1115,14 @@ int main()
 
 	CppUnit::TestSuite* modifiers = new CppUnit::TestSuite("Modifying tests");
 	modifiers->addTest(new CppUnit::TestCaller<Modifiers>("Clear", &Modifiers::clear));
-	modifiers->addTest(new CppUnit::TestCaller<Modifiers>("Insert", &Modifiers::insert));
+
+	CppUnit::TestSuite* insert = new CppUnit::TestSuite("Insert");
+	insert->addTest(new CppUnit::TestCaller<Modifiers>("Insert to empty", &Modifiers::insert_e));
+	insert->addTest(new CppUnit::TestCaller<Modifiers>("Insert at front", &Modifiers::insert_f));
+	insert->addTest(new CppUnit::TestCaller<Modifiers>("Insert at middle", &Modifiers::insert_m));
+	insert->addTest(new CppUnit::TestCaller<Modifiers>("Insert at back", &Modifiers::insert_b));
+	insert->addTest(new CppUnit::TestCaller<Modifiers>("Insert range", &Modifiers::insert_r));
+	modifiers->addTest(insert);
 
 	CppUnit::TestSuite* erase = new CppUnit::TestSuite("Erase");
 	erase->addTest(new CppUnit::TestCaller<Modifiers>("Erase front", &Modifiers::erase_f));
@@ -1072,8 +1191,8 @@ int main()
 	remove->addTest(new CppUnit::TestCaller<Operations>("Remove front", &Operations::remove_f));
 	remove->addTest(new CppUnit::TestCaller<Operations>("Remove middle", &Operations::remove_m));
 	remove->addTest(new CppUnit::TestCaller<Operations>("Remove back", &Operations::remove_b));
-	remove->addTest(new CppUnit::TestCaller<Operations>("Remove odd", &Operations::remove_if_odd));
-	remove->addTest(new CppUnit::TestCaller<Operations>("Remove even", &Operations::remove_if_even));
+	remove->addTest(new CppUnit::TestCaller<Operations>("Remove_if odd", &Operations::remove_if_odd));
+	remove->addTest(new CppUnit::TestCaller<Operations>("Remove_if even", &Operations::remove_if_even));
 	operations->addTest(remove);
 
 	CppUnit::TestSuite* reverse = new CppUnit::TestSuite("Reverse");
@@ -1091,6 +1210,15 @@ int main()
 	sort->addTest(new CppUnit::TestCaller<Operations>("Sort predicate", &Operations::sort_p));
 	operations->addTest(sort);
 	
+	CppUnit::TestSuite* comparators = new CppUnit::TestSuite("comparators");
+	comparators->addTest(new CppUnit::TestCaller<Comparators>("==", &Comparators::eq));
+	comparators->addTest(new CppUnit::TestCaller<Comparators>("!=", &Comparators::uneq));
+	comparators->addTest(new CppUnit::TestCaller<Comparators>("<", &Comparators::less));
+	comparators->addTest(new CppUnit::TestCaller<Comparators>("<=", &Comparators::less_eq));
+	comparators->addTest(new CppUnit::TestCaller<Comparators>(">", &Comparators::greater));
+	comparators->addTest(new CppUnit::TestCaller<Comparators>(">=", &Comparators::greater_eq));
+
+
 	runner.addTest(constructors);
 	runner.addTest(new Alloc());
 	runner.addTest(assign);
@@ -1099,6 +1227,7 @@ int main()
 	runner.addTest(capacity);
 	runner.addTest(modifiers);
 	runner.addTest(operations);
+	runner.addTest(comparators);
 
 	runner.run("",true,true,false);
 }
