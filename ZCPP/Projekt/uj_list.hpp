@@ -1,6 +1,9 @@
 /**
  * uj::list by Piotr Grudzien
+ * @file uj_list.hpp
+ * @author Piotr Grudzien
  */
+
 
 #ifndef UJ_LIST_HPP
 #define UJ_LIST_HPP
@@ -10,27 +13,54 @@
 #include<stdexcept>
 #include<limits>
 
+/** UJ namespace for assignment */
 namespace uj
 {
+	/**
+	 * \brief Forward List providing C++98 std::list interface.
+	 * 
+	 * Does not support reverse iterators.
+	 */
 	template<typename T, typename Allocator = std::allocator<T>>
 	class list
 	{
 	private:
+		/**
+		 * \brief Private nested class of uj::list.
+		 * 
+		 * Basic node for use as a sentinel.
+		 */
 		struct lnode
 		{
-			lnode* next = nullptr;
+			lnode* next = nullptr; /**< Pointer to node containing next element in list. */
 		};
 
+		/**
+		 * \brief Private nested class of uj::list.
+		 *
+		 * Node containing actual element of list.
+		 */
 		struct typenode : lnode
 		{
-			T value;
+			T value; /**< value of element contained in list. */
 
+			/**
+			 * \brief Typenode constructor.
+			 * 
+			 * Constructs typenode passing parameters to constructed object.
+			 * \param[in] args Arguments passed to constructed object.
+			 */
 			template<typename... Args>
 			typenode(Args&&... args): value(std::forward<Args>(args)...)
 			{}
 		};
 	
 //	public:
+		/**
+		 * \brief Const interator class.
+		 * 
+		 * const Forward Iterator used by uj::list
+		 */
 		class citer
 		{
 			friend class list;
@@ -42,27 +72,44 @@ namespace uj
 			using iterator_category = std::forward_iterator_tag;
 			
 		protected:
-			lnode* pnode = nullptr;
+			lnode* pnode = nullptr;/**< Pointer to node before the element pointed to by iterator */
 		
 		public:
+			/** Default constructor */
 			citer() = default;
+			/** Default destructor */
 			~citer() = default;
+			/** Constructs iterator pointing to element in p->next node
+			 * \param[in] Pointer to node
+			 */
 			citer(lnode* p): pnode(p){}
+			/** Default copu constructor */
 			citer(const citer&) = default;
-			citer(citer&&) = default;
+			/** Default copy assignment operator */
 			citer& operator=(const citer&) = default;
-			citer& operator=(citer&&) = default;
 			
+			/**
+			 * Dereference operator
+			 * \return reference to const object pointed to by iterator.
+			 */
 			reference operator*() const noexcept
 			{
 				return reinterpret_cast<typenode*>(this->pnode->next)->value;
 			}
 			
+			/**
+			* Class member operator
+			* \return pointer to const object pointed to by iterator.
+			*/
 			pointer operator->() const noexcept
 			{
 				return &reinterpret_cast<typenode*>(this->pnode->next)->value;
 			}
 			
+			/**
+			 * Pre-increment operator
+			 * \return reference to *this
+			 */
 			citer& operator++() noexcept
 			{
 				
@@ -70,6 +117,10 @@ namespace uj
 				return *this;
 			}
 			
+			/**
+			* Post-increment operator
+			* \return Copy of *this before incrementation
+			*/
 			citer operator++(int) noexcept
 			{
 				citer tmp(*this);
@@ -77,27 +128,48 @@ namespace uj
 				return tmp;
 			}
 			
+			/**
+			* Returns pointer held by iterator
+			* \return held pointer
+			*/
 			lnode* node() const noexcept
 			{
 				return this->pnode;
 			}
 
+			/**
+			* Equality operator
+			* \return true if iterators point to the same element, otherwise false.
+			*/
 			friend bool operator==(const citer& lhs, const citer& rhs) noexcept
 			{
 				return lhs.pnode == rhs.pnode;
 			}
 			
+			/**
+			* Unequality operator
+			* \return false if iterator point to different elements, otherwise true.
+			*/
 			friend bool operator!=(const citer& lhs, const citer& rhs) noexcept
 			{
 				return lhs.pnode != rhs.pnode;
 			}
 			
+			/**
+			* Returns iterator to next element in list without incrementing *this
+			* \return Iterator to next element in sequence
+			*/
 			citer next() const noexcept
 			{
 				return citer(this->pnode->next);
 			}
 		};
 		
+		/**
+		* \brief Iterator class.
+		*
+		* Forward Iterator used by uj::list.
+		*/
 		class iter : public citer
 		{
 			friend class list;
@@ -109,30 +181,51 @@ namespace uj
 			using iterator_category = std::forward_iterator_tag;
 
 		public:
+			/** Default constructor */
 			iter() = default;
+			/** Default destructor */
 			~iter() = default;
+			/** Constructs iterator pointing to element in node p->next 
+			 * \param[in] p Pointer to node
+			 */
 			iter(lnode* p) : citer(p) {}
+			/** Default copy constructor */
 			iter(const iter&) = default;
-			iter(iter&&) = default;
+			/** Default copy assignment */
 			iter& operator=(const iter&) = default;
-			iter& operator=(iter&&) = default;
-
+			
+			/**
+			 * Dereference operator
+			 * \return Reference to object pointed to by iterator
+			 */
 			reference operator*() const noexcept
 			{
 				return reinterpret_cast<typenode*>(this->pnode->next)->value;
 			}
 
+			/**
+			* Class member operator
+			* \return Pointer to object pointed to by iterator
+			*/
 			pointer operator->() const noexcept
 			{
 				return &reinterpret_cast<typenode*>(this->pnode->next)->value;
 			}
 
+			/**
+			* Pre-increment operator
+			* \return Reference to *this
+			*/
 			iter& operator++() noexcept
 			{
 				this->pnode = this->pnode->next;
 				return *this;
 			}
 
+			/**
+			* Post-increment operator
+			* \return Copy of *this before incrementation
+			*/
 			iter operator++(int) noexcept
 			{
 				iter tmp(*this);
@@ -159,11 +252,17 @@ namespace uj
 		using const_iterator = citer;
 
 	private:
-		lnode head;
-		lnode* tail = &this->head;
-		size_t lSize = 0;
-		node_allocator_type alloc;
-		
+		lnode head; /**< Sentinel node */
+		lnode* tail = &this->head; /** Pointer to last node in sequence. Can point to head when list is empty */
+		size_type lSize = 0; /** Number of elements contained in the list */
+		node_allocator_type alloc; /** Allocator used by the list */
+
+		/**
+		 * \brief Allocates and constructs typenode and element
+		 * 
+		 * \param[in] Parameters passed to constructed object
+		 * \return Pointer to constructed node, nullptr if object constructor throws
+		 */
 		template<typename... Args>
 		typenode* getNode(Args&&... args)
 		{
@@ -183,14 +282,12 @@ namespace uj
 			}
 			return node;
 		}
-/*
-	template<typename T, typename... Args>
-	unique_ptr<T> make_unique(Args&&... args)
-	{
-		return unique_ptr<T>(new T(std::forward<Args>(args)...));
-	}
-*/
 		
+		/**
+		 * \brief Destroys and deallocate given node
+		 *
+		 * \param[in] Pointer to node to be freed
+		 */
 		void freeNode(typenode* node) noexcept
 		{
 			NodeAlloc::destroy(this->alloc,node);
