@@ -108,8 +108,8 @@ namespace uj
 			 */
 			citer& operator++() noexcept
 			{
-
-				this->pnode = this->pnode->next;
+				if(this->pnode->next)
+					this->pnode = this->pnode->next;
 				return *this;
 			}
 
@@ -120,7 +120,8 @@ namespace uj
 			citer operator++(int) noexcept
 			{
 				citer tmp(*this);
-				this->pnode = this->pnode->next;
+				if(this->pnode->next)
+					this->pnode = this->pnode->next;
 				return tmp;
 			}
 
@@ -218,7 +219,8 @@ namespace uj
 			 */
 			iter& operator++() noexcept
 			{
-				this->pnode = this->pnode->next;
+				if(this->pnode->next)
+					this->pnode = this->pnode->next;
 				return *this;
 			}
 
@@ -229,7 +231,8 @@ namespace uj
 			iter operator++(int) noexcept
 			{
 				iter tmp(*this);
-				this->pnode = this->pnode->next;
+				if(this->pnode->next)
+					this->pnode = this->pnode->next;
 				return tmp;
 			}
 		};

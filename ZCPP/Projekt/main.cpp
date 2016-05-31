@@ -1228,6 +1228,8 @@ int main()
 	runner.addTest(modifiers);
 	runner.addTest(operations);
 	runner.addTest(comparators);
+	
+	using l = uj::list<int>;
 
 	runner.run("",true,true,false);
 }

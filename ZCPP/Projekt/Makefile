@@ -1,5 +1,5 @@
 CPPFLAGS=-std=c++11 -Wall -Wextra -pedantic
-CC=/usr/bin/g++
+CC=g++
 Name=uj_list.exe
 Sources=main.cpp
 Headers=uj_list.hpp
@@ -11,7 +11,7 @@ Files=$(Sources) $(Headers) $(Extra)
 default: $(Name)
 
 $(Name): $(Sources) $(Headers)
-	$(CC) -o $@ $(Sources) $(CPPFLAGS) -lcppunit
+	$(CC) -o $@ $(Sources) $(CPPFLAGS) -lcppunit -D_GLIBCXX_USE_CXX11_ABI=0
 
 run: $(Name)
 	./$<
@@ -22,6 +22,7 @@ clean:
 
 tar: $(Files)
 	mkdir Lista
-	cp --parent $(Files) List
+	cp --parent $(Files) Lista
+	cp -r --parent Doxygen Lista
 	tar -czvf ListaPiotrGrudzien.tar.gz Lista
-	rm -rf List
+	rm -rf Lista
