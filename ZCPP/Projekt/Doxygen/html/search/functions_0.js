@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['citer',['citer',['../classuj_1_1list_1_1citer.html#aa76c7c88f914373d409e9e52dc12e464',1,'uj::list::citer::citer()=default'],['../classuj_1_1list_1_1citer.html#a566ee1edbbaa842053530fa03462063a',1,'uj::list::citer::citer(lnode *p)'],['../classuj_1_1list_1_1citer.html#ad0d4655c06ebd87a4c0af6dbe0d3abed',1,'uj::list::citer::citer(const citer &amp;)=default']]]
+  ['assign',['assign',['../classuj_1_1list.html#ace3f16b79ad9f8ac02ed57561dd72f29',1,'uj::list::assign(size_type count, const T &amp;value)'],['../classuj_1_1list.html#a3dabeac77f79554df076e5375638c972',1,'uj::list::assign(InIterator first, InIterator last)']]]
 ];

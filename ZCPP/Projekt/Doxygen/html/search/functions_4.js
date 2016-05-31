@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['next',['next',['../classuj_1_1list_1_1citer.html#aa8c9f42ef8eae775014d39eadc636c65',1,'uj::list::citer']]],
-  ['node',['node',['../classuj_1_1list_1_1citer.html#ae8cff1ef642bee9377ae75bb5431be7f',1,'uj::list::citer']]]
+  ['freenode',['freeNode',['../classuj_1_1list.html#a1aec3cd86e562e8984b53cb9bba7684c',1,'uj::list']]],
+  ['front',['front',['../classuj_1_1list.html#ae27be5e3365bf41da286c6459fc816cb',1,'uj::list::front()'],['../classuj_1_1list.html#ae03b4c47003b188ccbb29cc439cf8940',1,'uj::list::front() const ']]]
 ];

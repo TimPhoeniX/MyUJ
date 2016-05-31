@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['_7eciter',['~citer',['../classuj_1_1list_1_1citer.html#ac2bbe27d81788ab31161d5fce886b9c3',1,'uj::list::citer']]],
-  ['_7eiter',['~iter',['../classuj_1_1list_1_1iter.html#a0df9d9f9422ec0deb7dc1b2fda9ac478',1,'uj::list::iter']]]
+  ['list',['list',['../classuj_1_1list.html#a7f73131d3d2629368cd2163a4ad1e016',1,'uj::list::list(const Allocator &amp;alloc=Allocator())'],['../classuj_1_1list.html#a9f5e99332f5254f5e14dcaf10ceca8d9',1,'uj::list::list(size_type count, const T &amp;value=T(), const Allocator &amp;alloc=Allocator())'],['../classuj_1_1list.html#a8a0eb3ced8b9f1cecf8684eb0abb2a71',1,'uj::list::list(const list &amp;other)'],['../classuj_1_1list.html#a26a154fc81ccbcc4c2959888eb07bd33',1,'uj::list::list(InIterator first, InIterator last, const Allocator &amp;alloc=Allocator())']]]
 ];
