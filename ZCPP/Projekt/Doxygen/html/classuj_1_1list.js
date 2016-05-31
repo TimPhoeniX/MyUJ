@@ -52,6 +52,13 @@ var classuj_1_1list =
     [ "swap", "classuj_1_1list.html#a3ee7202eab1d35b5b6774e749d9497a5", null ],
     [ "unique", "classuj_1_1list.html#addcb44aaa1d92c79e078bef09b676e16", null ],
     [ "unique", "classuj_1_1list.html#ae58091984701c4bb5083b958b6d554a1", null ],
+    [ "operator!=", "classuj_1_1list.html#ad40cb5b42f257a321a5df8e4f4797249", null ],
+    [ "operator<", "classuj_1_1list.html#af8e9a9a12737f32c1502b3e89d8cc9cc", null ],
+    [ "operator<=", "classuj_1_1list.html#a389a75ee01482fcf077d55cbd73c6633", null ],
+    [ "operator==", "classuj_1_1list.html#a4fe4df78bbbf3be20e5c95d6d9f0e882", null ],
+    [ "operator>", "classuj_1_1list.html#a9bae333faf0796ef77481f29fc2459da", null ],
+    [ "operator>=", "classuj_1_1list.html#a3e6f7f6baa85cbd50f9e579c77ce9f06", null ],
+    [ "swap", "classuj_1_1list.html#a6ad16c821c70286e681ffa4c14f33ccb", null ],
     [ "alloc", "classuj_1_1list.html#a97b9c3bcf222cb2f16c5053f70332924", null ],
     [ "head", "classuj_1_1list.html#ac7c4ca58903d274531feae9461b175cd", null ],
     [ "lSize", "classuj_1_1list.html#ad11ca8e05ea4a38d5752029e80bc2e5c", null ]

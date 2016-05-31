@@ -138,7 +138,8 @@ Public Attributes</h2></td></tr>
 <div class="textblock"><h3>template&lt;typename T, typename Allocator = std::allocator&lt;T&gt;&gt;<br />
 struct uj::list&lt; T, Allocator &gt;::typenode</h3>
 
-<p>Node containing actual element of list. </p>
+<p>Private nested class of <a class="el" href="classuj_1_1list.html" title="Forward List providing C++98 std::list interface. ">uj::list</a>. </p>
+<p>Node containing actual element of list </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="adae34714f28ad897e37c3d6e4a290395"></a>
 <div class="memitem">
@@ -165,9 +166,11 @@ template&lt;typename... Args&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Constructs typenode passing parameters to constructed object. </p><dl class="params"><dt>Parameters</dt><dd>
+
+<p>Typenode constructor. </p>
+<p>Constructs typenode passing parameters to constructed object </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">args</td><td>Arguments passed to constructed object. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">args</td><td>Arguments passed to constructed object </td></tr>
   </table>
   </dd>
 </dl>
@@ -186,7 +189,7 @@ template&lt;typename T, typename Allocator = std::allocator&lt;T&gt;&gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>value of element contained in list. </p>
+<p>value of element contained in list </p>
 
 </div>
 </div>
