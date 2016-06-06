@@ -80,6 +80,13 @@ public:
 
 class Alloc : public CppUnit::TestCase
 {
+	template<typename Container, typename = void>
+	void try_allocator();
+	{
+		
+	}
+	
+	template<typename Container, typename = std::enable_if<decltype>>
 public:
 	void runTest() override
 	{
@@ -1229,7 +1236,5 @@ int main()
 	runner.addTest(operations);
 	runner.addTest(comparators);
 	
-	using l = uj::list<int>;
-
-	runner.run("",true,true,false);
+	runner.run("",false,true,true);
 }

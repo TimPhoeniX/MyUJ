@@ -793,6 +793,7 @@ namespace uj
 		template <class Compare>
 		void merge(list& other, Compare comp)
 		{
+			if(this == &other) return;
 			auto a = &this->head;
 			auto b = &other.head;
 			lnode* tmp = nullptr;
