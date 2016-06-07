@@ -1,8 +1,8 @@
 var classuj_1_1list_1_1citer =
 [
+    [ "citer", "classuj_1_1list_1_1citer.html#a566ee1edbbaa842053530fa03462063a", null ],
     [ "citer", "classuj_1_1list_1_1citer.html#aa76c7c88f914373d409e9e52dc12e464", null ],
     [ "~citer", "classuj_1_1list_1_1citer.html#ac2bbe27d81788ab31161d5fce886b9c3", null ],
-    [ "citer", "classuj_1_1list_1_1citer.html#a566ee1edbbaa842053530fa03462063a", null ],
     [ "citer", "classuj_1_1list_1_1citer.html#ad0d4655c06ebd87a4c0af6dbe0d3abed", null ],
     [ "next", "classuj_1_1list_1_1citer.html#aa8c9f42ef8eae775014d39eadc636c65", null ],
     [ "node", "classuj_1_1list_1_1citer.html#ae8cff1ef642bee9377ae75bb5431be7f", null ],
