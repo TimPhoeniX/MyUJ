@@ -80,18 +80,26 @@ public:
 
 class Alloc : public CppUnit::TestCase
 {
-	template<typename Container, typename = void>
-	void try_allocator();
+
+
+	//template<typename Container>
+	//std::enable_if<!std::is_same<decltype(typename Container::allocator_type, std::true_type), std::true_type>::value, void>
+	//try_allocator()
+	//{
+
+	//}
+
+	template<typename Container>
+	std::enable_if<std::is_same<typename Container::allocator_type, typename Container::allocator_type>::value, void>
+	try_allocator(Container& l)
 	{
-		
+		CPPUNIT_ASSERT_NO_THROW(l.get_allocator());
 	}
-	
-	template<typename Container, typename = std::enable_if<decltype>>
 public:
 	void runTest() override
 	{
 		uj::list<int> l;
-		CPPUNIT_ASSERT_NO_THROW(l.get_allocator());
+		try_allocator(l);
 	}
 };
 
