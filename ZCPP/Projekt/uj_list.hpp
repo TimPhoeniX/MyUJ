@@ -7,6 +7,7 @@
 
 #ifndef UJ_LIST_HPP
 #define UJ_LIST_HPP
+#define COMPARABLE
 
 #include<memory>
 #include<iterator>
