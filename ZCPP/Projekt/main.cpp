@@ -7,6 +7,7 @@
 #include <cppunit/TextOutputter.h>
 #include <algorithm>
 #include <utility>
+#include <memory>
 #include <functional>
 #include <iostream>
 #include "uj_list.hpp"
@@ -82,15 +83,13 @@ class Alloc : public CppUnit::TestCase
 {
 
 
-	//template<typename Container>
-	//std::enable_if<!std::is_same<decltype(typename Container::allocator_type, std::true_type), std::true_type>::value, void>
-	//try_allocator()
-	//{
-
-	//}
+	template<typename Container>
+	typename std::enable_if<!(std::uses_allocator<Container,std::allocator<int>>::value)>::type
+	try_allocator(Container&)
+	{}
 
 	template<typename Container>
-	std::enable_if<std::is_same<typename Container::allocator_type, typename Container::allocator_type>::value, void>
+	typename std::enable_if<std::uses_allocator<Container,std::allocator<int>>::value>::type
 	try_allocator(Container& l)
 	{
 		CPPUNIT_ASSERT_NO_THROW(l.get_allocator());
@@ -203,6 +202,16 @@ public:
 
 class Iterators : public ListTest
 {
+	class fields
+	{
+	public:
+		fields(int g) :a(g){}
+		int a = 0;
+		int ret()
+		{
+			return a;
+		}
+	};
 public:
 	void empty()
 	{
@@ -232,6 +241,14 @@ public:
 		{
 			CPPUNIT_ASSERT_EQUAL(*(arr++), *b);
 		}
+	}
+	
+	void member()
+	{
+		uj::list<fields> f;
+		f.push_back(fields(5));
+		auto it = f.begin();
+		CPPUNIT_ASSERT_EQUAL(it->a,it->ret());
 	}
 };
 
@@ -561,6 +578,7 @@ public:
 
 	void swap_f()
 	{
+		using std::swap; //Just in case
 		uj::list<int> a(array, array + 10);
 		uj::list<int> b(inserts, inserts + 5);
 		l->operator=(a);
@@ -1122,6 +1140,7 @@ int main()
 	iterators->addTest(new CppUnit::TestCaller<Iterators>("Empty list iterators", &Iterators::empty));
 	iterators->addTest(new CppUnit::TestCaller<Iterators>("Iterating over list", &Iterators::iterating));
 	iterators->addTest(new CppUnit::TestCaller<Iterators>("Iterating over const list", &Iterators::const_iterating));
+	iterators->addTest(new CppUnit::TestCaller<Iterators>("Accessing members", &Iterators::member));
 
 	CppUnit::TestSuite* capacity = new CppUnit::TestSuite("Capacity tests");
 	capacity->addTest(new CppUnit::TestCaller<Capacity>("Empty", &Capacity::empty));
@@ -1242,7 +1261,8 @@ int main()
 	runner.addTest(capacity);
 	runner.addTest(modifiers);
 	runner.addTest(operations);
+#ifdef COMPARABLE
 	runner.addTest(comparators);
-	
+#endif
 	runner.run("",false,true,true);
 }

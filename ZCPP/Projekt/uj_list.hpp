@@ -28,6 +28,7 @@ namespace uj
 		/**
 		 * \brief Private nested class of uj::list
 		 * \details Basic node for use as a sentinel
+		 * \details Inspired by GCC's std::list implementation
 		 */
 		struct lnode
 		{
@@ -59,6 +60,28 @@ namespace uj
 		class citer
 		{
 			friend class list;
+			/**
+			 * \brief Constructs iterator pointing to element in p->next node
+			 * \param[in] p Pointer to node
+			 */
+			citer(lnode* p) : pnode(p) {}
+		    /**
+			 * \brief Returns pointer held by iterator
+			 * \returns held pointer
+			 */
+			lnode* node() const noexcept
+			{
+				return this->pnode;
+			}
+			
+			/**
+			 * \brief Returns iterator to next element in list without incrementing *this
+			 * \returns Iterator to next element in sequence
+			*/
+			citer next() const noexcept
+			{
+				return citer(this->pnode->next);
+			}
 		public:
 			using value_type = T;
 			using pointer = const value_type*;
@@ -74,11 +97,6 @@ namespace uj
 			citer() = default;
 			/** \brief Default destructor */
 			~citer() = default;
-			/**
-			 * \brief Constructs iterator pointing to element in p->next node
-			 * \param[in] p Pointer to node
-			 */
-			citer(lnode* p) : pnode(p) {}
 			/** \brief Default copy constructor */
 			citer(const citer&) = default;
 			/** \brief Default copy assignment operator */
@@ -126,15 +144,6 @@ namespace uj
 			}
 
 			/**
-			 * \brief Returns pointer held by iterator
-			 * \returns held pointer
-			 */
-			lnode* node() const noexcept
-			{
-				return this->pnode;
-			}
-
-			/**
 			 * \brief Equality operator
 			 * \param[in] lhs iterator to be compared
 			 * \param[in] rhs iterator to be compared
@@ -155,15 +164,6 @@ namespace uj
 			{
 				return lhs.pnode != rhs.pnode;
 			}
-
-			/**
-			 * \brief Returns iterator to next element in list without incrementing *this
-			 * \returns Iterator to next element in sequence
-			*/
-			citer next() const noexcept
-			{
-				return citer(this->pnode->next);
-			}
 		};
 
 		/**
@@ -173,6 +173,11 @@ namespace uj
 		class iter : public citer
 		{
 			friend class list;
+			/**
+			 * \brief Constructs iterator pointing to element in node p->next
+			 * \param[in] p Pointer to node
+			 */
+			iter(lnode* p) : citer(p) {}
 		public:
 			using value_type = T;
 			using pointer = value_type*;
@@ -185,11 +190,6 @@ namespace uj
 			iter() = default;
 			/** \brief Default destructor */
 			~iter() = default;
-			/**
-			 * \brief Constructs iterator pointing to element in node p->next
-			 * \param[in] p Pointer to node
-			 */
-			iter(lnode* p) : citer(p) {}
 			/** \brief Default copy constructor */
 			iter(const iter&) = default;
 			/** \brief Default copy assignment operator */
@@ -755,6 +755,7 @@ namespace uj
 		void swap(list& other)
 		{
 			using std::swap;
+			if(this==&other) return;
 			if(NodeAlloc::propagate_on_container_swap::value)
 			{
 				swap(this->alloc, other.alloc);
