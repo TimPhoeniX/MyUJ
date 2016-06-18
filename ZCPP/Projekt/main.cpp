@@ -1028,6 +1028,7 @@ public:
 	}
 };
 
+#ifdef COMPARABLE
 class Comparators : public ListTest
 {
 	uj::list<int>* t = nullptr;
@@ -1113,6 +1114,7 @@ public:
 	}
 
 };
+#endif
 
 int main()
 {
@@ -1244,6 +1246,7 @@ int main()
 	sort->addTest(new CppUnit::TestCaller<Operations>("Sort predicate", &Operations::sort_p));
 	operations->addTest(sort);
 	
+#ifdef COMPARABLE
 	CppUnit::TestSuite* comparators = new CppUnit::TestSuite("comparators");
 	comparators->addTest(new CppUnit::TestCaller<Comparators>("==", &Comparators::eq));
 	comparators->addTest(new CppUnit::TestCaller<Comparators>("!=", &Comparators::uneq));
@@ -1251,7 +1254,7 @@ int main()
 	comparators->addTest(new CppUnit::TestCaller<Comparators>("<=", &Comparators::less_eq));
 	comparators->addTest(new CppUnit::TestCaller<Comparators>(">", &Comparators::greater));
 	comparators->addTest(new CppUnit::TestCaller<Comparators>(">=", &Comparators::greater_eq));
-
+#endif
 
 	runner.addTest(constructors);
 	runner.addTest(new Alloc());
