@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Transforms</title>
+    <style>
+        canvas {
+
+            margin-right: auto;
+            margin-left: auto;
+
+        }
+    </style>
+</head>
+<body>
+
+<div style="text-align: left">
+    <canvas width="600" height="400" id="canvas" style="border: none; margin: 20px"></canvas>
+    <div style="margin-left: 50px; height: 10px; width: 10px; background: black" onclick="alert('X')"></div>
+</div>
+<script>
+    var canvas = document.getElementById("canvas");
+    var ctx = canvas.getContext("2d");
+
+    var l = 120;
+    var w = 20;
+    var offset = {
+        x: 50,
+        y: 50
+    };
+
+    function Command(op, args) {
+        this.op = op;
+        this.args = args;
+        return this;
+    }
+
+    Command.prototype.exec = function () {
+        if (this.op != "rotate")
+            ctx[this.op].apply(ctx, this.args);
+        else {
+
+            ctx.rotate(this.args);
+
+        }
+    };
+
+    function CompoundCommand(commands) {
+        this.commands = [];
+        var coms = this.commands;
+        console.log(this.commands);
+        commands.forEach(function (command) {
+            console.log(coms);
+            coms.push(command);
+        });
+        console.log(this.commands);
+    }
+
+    CompoundCommand.prototype.exec = function exec() {
+        for (var i = this.commands.length - 1; i >= 0; i--) {
+            this.commands[i].exec();
+        }
+    };
+
+
+    CompoundCommand.compose = function compose(cmd1, cmd2) {
+        return new CompoundCommand([cmd1, cmd2]);
+    };
+
+
+    function pack(op, args) {
+        return function () {
+            ctx[op].apply(ctx, args);
+        }
+    }
+
+
+    function wagon(label) {
+
+        ctx.save();
+
+        ctx.beginPath();
+        ctx.moveTo(-w / 2, w / 2);
+        ctx.lineTo(l + w / 2, w / 2);
+        ctx.setLineDash([1,1]);
+        ctx.strokeStyle = "#000000";
+        ctx.stroke();
+        ctx.fillStyle = "#ff0000";
+        ctx.fillRect(0, 0, l, w);
+        ctx.fillStyle="#000000";
+        ctx.font=0.75*w+"px serif";
+        ctx.fillText(label,(l-ctx.measureText(label).width)/2,3*w/4);
+        ctx.restore();
+    }
+
+    ctx.translate(offset.x, offset.y);
+    ctx.save();
+    ctx.strokeStyle = "#777777";
+    ctx.setLineDash([3,3]);
+    ctx.beginPath();
+    ctx.moveTo(250,0);
+    ctx.lineTo(250,300);
+    ctx.moveTo(0,  150);
+    ctx.lineTo(500, 150);
+    ctx.stroke();
+    ctx.restore();
+
+
+    ctx.strokeRect(0, 0, 500, 300);
+
+
+    ctx.strokeStyle="#000000";
+
+    ctx.translate(250,150);
+    wagon(1);
+    (new Command("translate",[l+w/2,w/2]).exec());
+    (new Command("rotate", [0.3])).exec();
+    (new Command("translate", [w / 2, -w / 2])).exec();
+
+    wagon(2);
+
+
+</script>
+</body>
+</html>

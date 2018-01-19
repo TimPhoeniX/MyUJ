@@ -1,5 +1,5 @@
 CPPFLAGS=-std=c++11 -Wall -Wextra -pedantic
-CC=g++
+CC=g++-6
 Name=uj_list.exe
 Sources=main.cpp
 Headers=uj_list.hpp
