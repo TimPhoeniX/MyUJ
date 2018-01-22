@@ -1,5 +1,4 @@
 "use strict";
-/// <reference path="./gl-matrix.d.ts" />
 
 class Model
 {
