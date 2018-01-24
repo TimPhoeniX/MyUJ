@@ -103,16 +103,16 @@ class Hexahedron
     {
         if(vertices.length != 8)
             throw Error("Inalid numbeer of hexahedron vertices");
-        let VertexBuffer = new Float32Array(6*4*8);
+        let VertexBuffer = new Float32Array(6*4*14);
         let IndexBuffer = new Uint16Array(6*2*3);
         let setFace = function(face, ll, lr, ur, ul)
         {   
             let ofs = face*4;
             IndexBuffer.set([ofs,ofs+1,ofs+2,ofs,ofs+2,ofs+3],face*6);
-            ll = vec3.fromValues.apply(null,vertices[ll]);
-            lr = vec3.fromValues.apply(null,vertices[lr]);
-            ur = vec3.fromValues.apply(null,vertices[ur]);
-            ul = vec3.fromValues.apply(null,vertices[ul]);
+            ll = vec3.fromValues(...vertices[ll]);
+            lr = vec3.fromValues(...vertices[lr]);
+            ur = vec3.fromValues(...vertices[ur]);
+            ul = vec3.fromValues(...vertices[ul]);
             let u = vec3.create();
             let v = vec3.create();
             let normal = vec3.create();
@@ -125,16 +125,24 @@ class Hexahedron
             vec3.sub(v,v,projection);
             vec3.normalize(v,v);
             vec3.normalize(u,u);
-            ofs *= 8;
+            ofs *= 14;
             VertexBuffer.set(ll,ofs);
-            VertexBuffer.set(lr,ofs+8);
-            VertexBuffer.set(ur,ofs+16);
-            VertexBuffer.set(ul,ofs+24);
+            VertexBuffer.set(lr,ofs+14);
+            VertexBuffer.set(ur,ofs+28);
+            VertexBuffer.set(ul,ofs+42);
+            function setVB(vec,offset)
+            {
+                VertexBuffer.set(vec,offset);
+                VertexBuffer.set(vec,offset+14);
+                VertexBuffer.set(vec,offset+28);
+                VertexBuffer.set(vec,offset+42);
+            }
             ofs+=3;
-            VertexBuffer.set(normal,ofs);
-            VertexBuffer.set(normal,ofs+8);
-            VertexBuffer.set(normal,ofs+16);
-            VertexBuffer.set(normal,ofs+24);
+            setVB(normal,ofs);
+            ofs+=3;
+            setVB(u,ofs);
+            ofs+=3;
+            setVB(v,ofs);
         }
         setFace(0,0,3,2,1);
         setFace(1,4,5,6,7);
@@ -149,10 +157,10 @@ class Hexahedron
 
     setFaceTex(face, ll, lr, ur, ul)
     {
-        let ofs = face*4*8+6;
+        let ofs = face*4*14+12;
         this.VertexBuffer.set(ll,ofs);
-        this.VertexBuffer.set(lr,ofs+8);
-        this.VertexBuffer.set(ur,ofs+16);
-        this.VertexBuffer.set(ul,ofs+24);
+        this.VertexBuffer.set(lr,ofs+14);
+        this.VertexBuffer.set(ur,ofs+2*14);
+        this.VertexBuffer.set(ul,ofs+3*14);
     }
 }

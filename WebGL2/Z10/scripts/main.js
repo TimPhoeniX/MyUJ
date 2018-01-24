@@ -31,7 +31,7 @@ function init()
 
     gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
 
-    gl.clearColor(0.0, 0.0, 0.0, 1.0);
+    gl.clearColor(0.2, 0.2, 0.2, 1.0);
     gl.enable(gl.DEPTH_TEST);
     gl.enable(gl.CULL_FACE);
     gl.cullFace(gl.BACK);    
@@ -46,6 +46,7 @@ function init()
     var cam_info_ubi = gl.getUniformBlockIndex(program, "CamInfo");
     var material_ubi = gl.getUniformBlockIndex(program, "Material");
     var point_light_ubi = gl.getUniformBlockIndex(program, "PointLight");
+    var point_lightV_ubi = gl.getUniformBlockIndex(program, "PointLightV");
 
     // przyporzadkowanie ubi do ubb
     let matrices_ubb = 0;
@@ -56,32 +57,30 @@ function init()
     gl.uniformBlockBinding(program, material_ubi, material_ubb);
     let point_light_ubb = 3;
     gl.uniformBlockBinding(program, point_light_ubi, point_light_ubb);
+    let point_lightV_ubb = 4;
+    gl.uniformBlockBinding(program, point_lightV_ubi, point_lightV_ubb);
 
     // tworzenie sampler-a
-    var linear_sampler = gl.createSampler();
-    // Ustawienie parametrów sampler-a
-    gl.samplerParameteri(linear_sampler, gl.TEXTURE_WRAP_S, gl.REPEAT);
-    gl.samplerParameteri(linear_sampler, gl.TEXTURE_WRAP_T, gl.REPEAT);
-    gl.samplerParameteri(linear_sampler, gl.TEXTURE_WRAP_R, gl.REPEAT);
-    gl.samplerParameteri(linear_sampler, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
-    gl.samplerParameteri(linear_sampler, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    let diffuseSampler = makeSampler();
+    let normalSampler = makeSampler();
     
     // tworzenie teksutry
-    var texture = gl.createTexture();
-    gl.bindTexture(gl.TEXTURE_2D, texture);
-    // wypelnianie tekstury jednym pikselem
+    let diffuse = document.querySelector("#diffuse");
+    let normal = document.querySelector("#normal");
+
+    let texdiffuse = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, texdiffuse);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array(255, 255, 255, 255));
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, diffuse);
+    gl.generateMipmap(gl.TEXTURE_2D);
     gl.bindTexture(gl.TEXTURE_2D, null);
-    // ładowanie obrazka (asynchronicznie)
-    var image = new Image();
-    image.src = "images/Modern_diffuse.png";
-    image.addEventListener('load', function(){
-        gl.bindTexture(gl.TEXTURE_2D, texture);
-        // ladowanie danych z obrazka do tekstury
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
-        // tworzenie mipmap
-        gl.generateMipmap(gl.TEXTURE_2D);
-    });
+
+    let texnormal = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, texnormal);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array(255, 255, 255, 255));
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, normal);
+    gl.generateMipmap(gl.TEXTURE_2D);
+    gl.bindTexture(gl.TEXTURE_2D, null);
 
     let Pyramid = new Hexahedron([
         [-0.5, -0.2,  0.5],
@@ -117,7 +116,9 @@ function init()
 
     let gpu_positions_attrib_location = 0; // musi być taka sama jak po stronie GPU!!!
     let gpu_normals_attrib_location = 1;
-    let gpu_tex_coord_attrib_location = 2;
+    let gpu_tangents_attrib_location = 2;
+    let gpu_bitangets_attrib_location = 3;
+    let gpu_tex_coord_attrib_location = 4;
 
     // tworzenie VAO
     var vao = gl.createVertexArray();
@@ -125,11 +126,15 @@ function init()
     gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, index_buffer);
     gl.enableVertexAttribArray(gpu_positions_attrib_location);
-    gl.vertexAttribPointer(gpu_positions_attrib_location, 3, gl.FLOAT, gl.FALSE, 8*4, 0);
+    gl.vertexAttribPointer(gpu_positions_attrib_location, 3, gl.FLOAT, gl.FALSE, 14*4, 0);
     gl.enableVertexAttribArray(gpu_normals_attrib_location);
-    gl.vertexAttribPointer(gpu_normals_attrib_location, 3, gl.FLOAT, gl.FALSE, 8*4, 3*4);
+    gl.vertexAttribPointer(gpu_normals_attrib_location, 3, gl.FLOAT, gl.FALSE, 14*4, 3*4);
+    gl.enableVertexAttribArray(gpu_tangents_attrib_location);
+    gl.vertexAttribPointer(gpu_tangents_attrib_location, 3, gl.FLOAT, gl.FALSE, 14*4, 6*4);
+    gl.enableVertexAttribArray(gpu_bitangets_attrib_location);
+    gl.vertexAttribPointer(gpu_bitangets_attrib_location, 3, gl.FLOAT, gl.FALSE, 14*4, 9*4);
     gl.enableVertexAttribArray(gpu_tex_coord_attrib_location);
-    gl.vertexAttribPointer(gpu_tex_coord_attrib_location, 2, gl.FLOAT, gl.FALSE, 8*4, 6*4);
+    gl.vertexAttribPointer(gpu_tex_coord_attrib_location, 2, gl.FLOAT, gl.FALSE, 14*4, 12*4);
     gl.bindVertexArray(null);
     gl.bindBuffer(gl.ARRAY_BUFFER, null);
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
@@ -176,14 +181,32 @@ function init()
 
     // ustawienia danych dla funkcji draw*
     gl.useProgram(program);
-    gl.bindSampler(0, linear_sampler);
+    gl.bindSampler(0, diffuseSampler);
     gl.activeTexture(gl.TEXTURE0 +  0);
-    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.bindTexture(gl.TEXTURE_2D, texdiffuse);
+    gl.bindSampler(1, normalSampler);
+    gl.activeTexture(gl.TEXTURE0 +  1);
+    gl.bindTexture(gl.TEXTURE_2D, texnormal);
+
+    gl.uniform1i(gl.getUniformLocation(program,"color_tex"), 0);
+    gl.uniform1i(gl.getUniformLocation(program,"normal_tex"), 1);
+
     gl.bindVertexArray(vao);
     gl.bindBufferBase(gl.UNIFORM_BUFFER, matrices_ubb, matrices_ubo);
     gl.bindBufferBase(gl.UNIFORM_BUFFER, cam_info_ubb, cam_info_ubo);
     gl.bindBufferBase(gl.UNIFORM_BUFFER, material_ubb, material_ubo);
     gl.bindBufferBase(gl.UNIFORM_BUFFER, point_light_ubb, point_light_ubo);
+    gl.bindBufferBase(gl.UNIFORM_BUFFER, point_lightV_ubb, point_light_ubo);
+
+    function makeSampler() {
+        var linear_sampler = gl.createSampler();
+        gl.samplerParameteri(linear_sampler, gl.TEXTURE_WRAP_S, gl.REPEAT);
+        gl.samplerParameteri(linear_sampler, gl.TEXTURE_WRAP_T, gl.REPEAT);
+        gl.samplerParameteri(linear_sampler, gl.TEXTURE_WRAP_R, gl.REPEAT);
+        gl.samplerParameteri(linear_sampler, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+        gl.samplerParameteri(linear_sampler, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        return linear_sampler;
+    }
 }
 
 var counter = 0.0;
@@ -253,21 +276,46 @@ var vs_source = `#version 300 es
     // "location" musi byc takie same jak po stronie CPU!!!
     layout(location = 0) in vec3 vertex_position;
     layout(location = 1) in vec3 vertex_normal;
-    layout(location = 2) in vec2 vertex_tex_coord;
+    layout(location = 2) in vec3 vertex_tangent;
+    layout(location = 3) in vec3 vertex_bitangent;
+    layout(location = 4) in vec2 vertex_tex_coord;
+
     out vec3 position_ws;
-    out vec3 normal_ws;
     out vec2 tex_coord;
+    out vec3 vV;
+    out vec3 vL;
+
+    layout(std140) uniform CamInfo
+    {
+       vec3 cam_pos_ws;
+    } additional_data;
+
     layout(std140) uniform Matrices
     {
         mat4 mvp_matrix;
         mat4 model_matrix;
     } matrices;
+    
+    layout(std140) uniform PointLightV
+    {
+       vec3 position_ws;
+    } point_light;
+
     void main()
     {
         gl_Position = matrices.mvp_matrix*vec4(vertex_position, 1.f);
         vec4 tmp_position_ws = matrices.model_matrix*vec4(vertex_position, 1.f);
         position_ws = tmp_position_ws.xyz/tmp_position_ws.w;
-        normal_ws = mat3x3(matrices.model_matrix)*vertex_normal;
+
+        vec3 normal_ws = mat3x3(matrices.model_matrix)*vertex_normal;
+        vec3 tangent_ws = mat3x3(matrices.model_matrix)*vertex_tangent;
+        vec3 bitangent_ws = mat3x3(matrices.model_matrix)*vertex_bitangent;
+
+        mat3 TBN = transpose(mat3(tangent_ws,bitangent_ws,normal_ws));
+
+        vV = normalize(TBN*(additional_data.cam_pos_ws - position_ws));
+        vL = normalize(TBN*(point_light.position_ws - position_ws));
+
         tex_coord = vertex_tex_coord;
     }`;
 
@@ -277,16 +325,13 @@ var fs_source = `#version 300 es
     precision mediump float;
 
     in vec3 position_ws;
-    in vec3 normal_ws;
+    in vec3 vV;
+    in vec3 vL;
     in vec2 tex_coord;
     out vec4 vFragColor;
 
     uniform sampler2D color_tex;
-
-    layout(std140) uniform CamInfo
-    {
-       vec3 cam_pos_ws;
-    } additional_data;
+    uniform sampler2D normal_tex;
 
     layout(std140) uniform Material
     {
@@ -305,9 +350,9 @@ var fs_source = `#version 300 es
     void main()
     {
         vec3 dist = point_light.position_ws-position_ws;
-        vec3 N = normalize(normal_ws);
-        vec3 V = normalize(additional_data.cam_pos_ws-position_ws);
-        vec3 L = normalize(dist);
+        vec3 L = normalize(vL);
+        vec3 V = normalize(vL);
+        vec3 N = normalize(texture(normal_tex,tex_coord).xyz*2.0-1.0);
         vec3 H = normalize(L+V);
         //float attenuation = max(1. - (dist.x*dist.x+dist.y*dist.y+dist.z*dist.z)/point_light.r,0.0);
         float attenuation = 1.0/ (1.0 + (dist.x*dist.x+dist.y*dist.y+dist.z*dist.z)*0.04);
@@ -316,8 +361,6 @@ var fs_source = `#version 300 es
         diffuse *= attenuation;
         vec3 specular = pow(max(dot(H,N),0.0),material.specular_power)*material.specular_intensity*point_light.color;
         specular *= attenuation;
-        vec3 ambient = vec3(0.0,0.0,0.3);
+        vec3 ambient = vec3(0.3);
         vFragColor = vec4(tex_color.rgb*(ambient+diffuse)+specular,1.0);
     }`;
-
-main();
