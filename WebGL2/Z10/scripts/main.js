@@ -140,7 +140,7 @@ function init()
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
 
     // pozycja kamery
-    let cam_pos = new Float32Array([0., 1., 2.]);
+    let cam_pos = new Float32Array([0., 0., 2.]);
 
     // dane o macierzy
     var mvp_matrix = mat4.create();
@@ -159,7 +159,7 @@ function init()
     let material_data = new Float32Array([1., 1., 1., 1., 256]);
 
     // dane dotyczace swiatla punktowego
-    let point_light_data = new Float32Array([0, 0.5, 4, 16., 1., 0., 0.]);
+    let point_light_data = new Float32Array([0, 0.2, 4, 16., 0.9, 0.9, 0.9]);
 
     // tworzenie UBO
     matrices_ubo = gl.createBuffer();
@@ -220,7 +220,7 @@ function draw()
     let mvp_matrix = mat4.create();
     let model_matrix = mat4.create();
     mat4.rotateY(model_matrix, model_matrix, counter);
-    //mat4.rotateZ(model_matrix, model_matrix, Math.PI/2);
+    mat4.rotateZ(model_matrix, model_matrix, Math.PI/2);
     //mat4.rotateY(model_matrix, model_matrix, counter);
     mat4.multiply(mvp_matrix, vp_matrix, model_matrix);    
 
@@ -307,9 +307,11 @@ var vs_source = `#version 300 es
         vec4 tmp_position_ws = matrices.model_matrix*vec4(vertex_position, 1.f);
         position_ws = tmp_position_ws.xyz/tmp_position_ws.w;
 
-        vec3 normal_ws = mat3x3(matrices.model_matrix)*vertex_normal;
-        vec3 tangent_ws = mat3x3(matrices.model_matrix)*vertex_tangent;
-        vec3 bitangent_ws = mat3x3(matrices.model_matrix)*vertex_bitangent;
+        mat3x3 nM = mat3x3(matrices.model_matrix);
+
+        vec3 normal_ws = nM*vertex_normal;
+        vec3 tangent_ws = nM*vertex_tangent;
+        vec3 bitangent_ws = nM*vertex_bitangent;
 
         mat3 TBN = transpose(mat3(tangent_ws,bitangent_ws,normal_ws));
 
@@ -361,6 +363,6 @@ var fs_source = `#version 300 es
         diffuse *= attenuation;
         vec3 specular = pow(max(dot(H,N),0.0),material.specular_power)*material.specular_intensity*point_light.color;
         specular *= attenuation;
-        vec3 ambient = vec3(0.3);
+        vec3 ambient = vec3(0.1);
         vFragColor = vec4(tex_color.rgb*(ambient+diffuse)+specular,1.0);
     }`;
