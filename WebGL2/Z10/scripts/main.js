@@ -46,6 +46,7 @@ function init()
     var cam_info_ubi = gl.getUniformBlockIndex(program, "CamInfo");
     var material_ubi = gl.getUniformBlockIndex(program, "Material");
     var point_light_ubi = gl.getUniformBlockIndex(program, "PointLight");
+    var ambient_light_ubi = gl.getUniformBlockIndex(program, "Ambient");
     var point_lightV_ubi = gl.getUniformBlockIndex(program, "PointLightV");
 
     // przyporzadkowanie ubi do ubb
@@ -59,26 +60,42 @@ function init()
     gl.uniformBlockBinding(program, point_light_ubi, point_light_ubb);
     let point_lightV_ubb = 4;
     gl.uniformBlockBinding(program, point_lightV_ubi, point_lightV_ubb);
+    let ambient_light_ubb = 5;
+    gl.uniformBlockBinding(program, ambient_light_ubi, ambient_light_ubb);
 
     // tworzenie sampler-a
     let diffuseSampler = makeSampler();
     let normalSampler = makeSampler();
+    let specularSampler = makeSampler();
+    let emissiverSampler = makeSampler();
     
     // tworzenie teksutry
     let diffuse = document.querySelector("#diffuse");
     let normal = document.querySelector("#normal");
+    let specular = document.querySelector("#specular");
+    let emissive = document.querySelector("#emissive");
 
     let texdiffuse = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, texdiffuse);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array(255, 255, 255, 255));
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, diffuse);
     gl.generateMipmap(gl.TEXTURE_2D);
     gl.bindTexture(gl.TEXTURE_2D, null);
 
     let texnormal = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, texnormal);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array(255, 255, 255, 255));
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, normal);
+    gl.generateMipmap(gl.TEXTURE_2D);
+    gl.bindTexture(gl.TEXTURE_2D, null);
+
+    let texspecular = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, texspecular);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, specular);
+    gl.generateMipmap(gl.TEXTURE_2D);
+    gl.bindTexture(gl.TEXTURE_2D, null);
+
+    let texemissive = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, texemissive);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, emissive);
     gl.generateMipmap(gl.TEXTURE_2D);
     gl.bindTexture(gl.TEXTURE_2D, null);
 
@@ -140,7 +157,7 @@ function init()
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
 
     // pozycja kamery
-    let cam_pos = new Float32Array([0., 0., 2.]);
+    let cam_pos = new Float32Array([0., 0., 1.5]);
 
     // dane o macierzy
     var mvp_matrix = mat4.create();
@@ -159,8 +176,9 @@ function init()
     let material_data = new Float32Array([1., 1., 1., 1., 256]);
 
     // dane dotyczace swiatla punktowego
-    let point_light_data = new Float32Array([0, 0.2, 4, 16., 0.9, 0.9, 0.9]);
+    let point_light_data = new Float32Array([-4.0, 0.0, 4, 24., 1.0, 1.0, 1.0]);
 
+    let ambient_light_data = new Float32Array([0.1,0.1,0.1]);
     // tworzenie UBO
     matrices_ubo = gl.createBuffer();
     gl.bindBuffer(gl.UNIFORM_BUFFER, matrices_ubo);
@@ -179,6 +197,11 @@ function init()
     gl.bufferData(gl.UNIFORM_BUFFER, point_light_data, gl.DYNAMIC_DRAW);
     gl.bindBuffer(gl.UNIFORM_BUFFER, null);
 
+    var ambient_light_ubo = gl.createBuffer();
+    gl.bindBuffer(gl.UNIFORM_BUFFER, ambient_light_ubo);
+    gl.bufferData(gl.UNIFORM_BUFFER, ambient_light_data, gl.DYNAMIC_DRAW);
+    gl.bindBuffer(gl.UNIFORM_BUFFER, null);
+
     // ustawienia danych dla funkcji draw*
     gl.useProgram(program);
     gl.bindSampler(0, diffuseSampler);
@@ -187,9 +210,17 @@ function init()
     gl.bindSampler(1, normalSampler);
     gl.activeTexture(gl.TEXTURE0 +  1);
     gl.bindTexture(gl.TEXTURE_2D, texnormal);
+    gl.bindSampler(2, specularSampler);
+    gl.activeTexture(gl.TEXTURE0 +  2);
+    gl.bindTexture(gl.TEXTURE_2D, texspecular);
+    gl.bindSampler(3, emissiverSampler);
+    gl.activeTexture(gl.TEXTURE0 +  3);
+    gl.bindTexture(gl.TEXTURE_2D, texemissive);
 
     gl.uniform1i(gl.getUniformLocation(program,"color_tex"), 0);
     gl.uniform1i(gl.getUniformLocation(program,"normal_tex"), 1);
+    gl.uniform1i(gl.getUniformLocation(program,"specular_tex"), 2);
+    gl.uniform1i(gl.getUniformLocation(program,"emissive_tex"), 3);
 
     gl.bindVertexArray(vao);
     gl.bindBufferBase(gl.UNIFORM_BUFFER, matrices_ubb, matrices_ubo);
@@ -197,6 +228,8 @@ function init()
     gl.bindBufferBase(gl.UNIFORM_BUFFER, material_ubb, material_ubo);
     gl.bindBufferBase(gl.UNIFORM_BUFFER, point_light_ubb, point_light_ubo);
     gl.bindBufferBase(gl.UNIFORM_BUFFER, point_lightV_ubb, point_light_ubo);
+    gl.bindBufferBase(gl.UNIFORM_BUFFER, ambient_light_ubb, ambient_light_ubo);
+
 
     function makeSampler() {
         var linear_sampler = gl.createSampler();
@@ -210,7 +243,7 @@ function init()
 }
 
 var counter = 0.0;
-const rot_speed = 0.005;
+const rot_speed = 0.0025;
 function draw()
 {
     // wyczyszczenie ekranu
@@ -334,6 +367,8 @@ var fs_source = `#version 300 es
 
     uniform sampler2D color_tex;
     uniform sampler2D normal_tex;
+    uniform sampler2D specular_tex;
+    uniform sampler2D emissive_tex;
 
     layout(std140) uniform Material
     {
@@ -349,6 +384,11 @@ var fs_source = `#version 300 es
        vec3 color;
     } point_light;
 
+    layout(std140) uniform Ambient
+    {
+        vec3 color;
+    } ambient_light;
+
     void main()
     {
         vec3 dist = point_light.position_ws-position_ws;
@@ -358,11 +398,13 @@ var fs_source = `#version 300 es
         vec3 H = normalize(L+V);
         //float attenuation = max(1. - (dist.x*dist.x+dist.y*dist.y+dist.z*dist.z)/point_light.r,0.0);
         float attenuation = 1.0/ (1.0 + (dist.x*dist.x+dist.y*dist.y+dist.z*dist.z)*0.04);
+        attenuation *= 1.0 - step(point_light.r,length(dist));
         vec4 tex_color = texture(color_tex,tex_coord);
         vec3 diffuse = material.color*point_light.color*max(dot(N,L),0.0);
         diffuse *= attenuation;
-        vec3 specular = pow(max(dot(H,N),0.0),material.specular_power)*material.specular_intensity*point_light.color;
+        vec3 specular = pow(max(dot(H,N),0.0),material.specular_power)*point_light.color;
         specular *= attenuation;
-        vec3 ambient = vec3(0.1);
-        vFragColor = vec4(tex_color.rgb*(ambient+diffuse)+specular,1.0);
+        specular *= texture(specular_tex,tex_coord).xyz;
+        vec3 emissive = (tex_color*texture(emissive_tex,tex_coord)).xyz;
+        vFragColor = vec4(clamp(tex_color.rgb*(ambient_light.color*material.color+diffuse)+specular+emissive,0.f,1.f),1.0);
     }`;
