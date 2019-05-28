@@ -8,10 +8,20 @@
         <script type="text/javascript" src="scripts/main.js"></script>
     </head>
     <body onload="main()">
-        <img id="diffuse" src="images/Modern_diffuse.png" style="display:none;"></img>
-        <img id="normal"src="images/Modern_normal.png" style="display:none;"></img>
-        <img id="specular"src="images/Modern_specular.png" style="display:none;"></img>
-        <img id="emissive"src="images/Modern_emissive.png" style="display:none;"></img>
         <canvas id="glcanvas" width="1366" height="768"></canvas>
+        <table>
+            <tr>
+                <th>Diffuse</th>
+                <th>Normal</th>
+                <th>Specular</th>
+                <th>Emissive</th>
+            </tr>
+            <tr>
+                <th><img id="diffuse" src="images/Modern_diffuse.png" height="256" width="256"></img></th>
+                <th><img id="normal" src="images/Modern_normal.png" height="256" width="256"></img></th>
+                <th><img id="specular" src="images/Modern_specular.png" height="256" width="256"></img></th>
+                <th><img id="emissive" src="images/Modern_emissive.png" height="256" width="256"></img></th>
+            </tr>
+        </table>
     </body>
 </html>
